@@ -1,0 +1,2270 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>도윤 ♥ 서연 — Wedding Invitation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300;1,9..40,400&family=Noto+Sans+KR:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #0A0A0A;
+  --bg-card: #141414;
+  --bg-card-hover: #1a1a1a;
+  --text-primary: #FFFFFF;
+  --text-secondary: rgba(255,255,255,0.65);
+  --text-tertiary: rgba(255,255,255,0.4);
+  --gradient-1: linear-gradient(135deg, #A855F7, #EC4899, #F97316);
+  --gradient-2: linear-gradient(135deg, #14B8A6, #3B82F6, #059669);
+  --gradient-3: linear-gradient(135deg, #F472B6, #A78BFA, #60A5FA);
+  --gradient-4: linear-gradient(135deg, #FBBF24, #F97316, #EF4444);
+  --purple: #A855F7;
+  --pink: #EC4899;
+  --orange: #F97316;
+  --teal: #14B8A6;
+  --blue: #3B82F6;
+  --emerald: #059669;
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 24px;
+  --radius-xl: 32px;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+body {
+  font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Mobile-first container */
+.invitation-wrap {
+  max-width: 430px;
+  margin: 0 auto;
+  position: relative;
+  overflow: hidden;
+}
+
+@media (min-width: 431px) {
+  body {
+    background: #000000;
+  }
+  .invitation-wrap {
+    border-left: 1px solid rgba(255,255,255,0.06);
+    border-right: 1px solid rgba(255,255,255,0.06);
+    min-height: 100vh;
+    box-shadow: 0 0 80px rgba(168,85,247,0.05), 0 0 160px rgba(236,72,153,0.03);
+  }
+}
+
+/* ===== TYPOGRAPHY ===== */
+.heading-xl {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 3rem;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+.heading-lg {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 2rem;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.heading-md {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.body-text {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 0.95rem;
+  line-height: 1.85;
+  color: var(--text-secondary);
+}
+
+.label-text {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ===== SECTION COMMON ===== */
+section {
+  position: relative;
+  padding: 80px 28px;
+}
+
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.section-label::before {
+  content: '';
+  width: 20px;
+  height: 1px;
+  background: var(--gradient-1);
+}
+
+/* ===== ANIMATED GRADIENT ORBS ===== */
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0.4;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.orb-1 {
+  width: 300px; height: 300px;
+  background: conic-gradient(from 0deg, #A855F7, #EC4899, #F97316, #A855F7);
+  top: -100px; right: -100px;
+  animation: orbFloat1 8s ease-in-out infinite;
+}
+
+.orb-2 {
+  width: 250px; height: 250px;
+  background: conic-gradient(from 120deg, #14B8A6, #3B82F6, #059669, #14B8A6);
+  top: 600px; left: -120px;
+  animation: orbFloat2 10s ease-in-out infinite;
+}
+
+.orb-3 {
+  width: 200px; height: 200px;
+  background: radial-gradient(circle, #F472B6 0%, #A78BFA 50%, transparent 70%);
+  top: 1200px; right: -80px;
+  animation: orbFloat3 7s ease-in-out infinite;
+}
+
+.orb-4 {
+  width: 350px; height: 350px;
+  background: conic-gradient(from 240deg, #FBBF24, #F97316, #EC4899, #A855F7, #FBBF24);
+  top: 2000px; left: -150px;
+  animation: orbFloat1 12s ease-in-out infinite reverse;
+}
+
+.orb-5 {
+  width: 280px; height: 280px;
+  background: conic-gradient(from 60deg, #059669, #14B8A6, #3B82F6, #A855F7, #059669);
+  top: 3000px; right: -120px;
+  animation: orbFloat2 9s ease-in-out infinite;
+}
+
+.orb-6 {
+  width: 220px; height: 220px;
+  background: radial-gradient(circle, #EC4899 0%, #F97316 40%, transparent 70%);
+  top: 4200px; left: -100px;
+  animation: orbFloat3 11s ease-in-out infinite;
+}
+
+@keyframes orbFloat1 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, 20px) scale(1.1); }
+  66% { transform: translate(-20px, -15px) scale(0.95); }
+}
+
+@keyframes orbFloat2 {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(25px, -25px) scale(1.08); }
+}
+
+@keyframes orbFloat3 {
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(-15px, 20px) rotate(30deg); }
+}
+
+/* ===== HERO SECTION ===== */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 60px 28px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-mesh {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: conic-gradient(from 0deg at 50% 50%,
+    #A855F7 0deg, #EC4899 60deg, #F97316 120deg,
+    #FBBF24 180deg, #14B8A6 240deg, #3B82F6 300deg, #A855F7 360deg);
+  filter: blur(100px);
+  opacity: 0.35;
+  animation: meshRotate 15s linear infinite;
+}
+
+@keyframes meshRotate {
+  0% { transform: translate(-50%, -50%) rotate(0deg) scale(1); }
+  50% { transform: translate(-50%, -50%) rotate(180deg) scale(1.15); }
+  100% { transform: translate(-50%, -50%) rotate(360deg) scale(1); }
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 400;
+  font-size: 0.8rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 40px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+.hero-date-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04);
+  backdrop-filter: blur(10px);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  margin-bottom: 48px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.5s forwards;
+}
+
+.hero-date-badge .dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--gradient-1);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.5; transform: scale(0.8); }
+}
+
+.hero-names {
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.7s forwards;
+}
+
+.hero-names .name {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 3.5rem;
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+  display: block;
+}
+
+.hero-names .amp {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 2rem;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+  margin: 8px 0;
+}
+
+.hero-korean-names {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  letter-spacing: 0.15em;
+  margin-bottom: 60px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.9s forwards;
+}
+
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.2s forwards;
+}
+
+.hero-scroll-indicator span {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.scroll-line {
+  width: 1px;
+  height: 40px;
+  position: relative;
+  overflow: hidden;
+  background: rgba(255,255,255,0.1);
+}
+
+.scroll-line::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 0;
+  width: 1px;
+  height: 40px;
+  background: var(--gradient-1);
+  animation: scrollDown 2s ease-in-out infinite;
+}
+
+@keyframes scrollDown {
+  0% { top: -40px; }
+  100% { top: 40px; }
+}
+
+/* ===== FADE ANIMATIONS ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ===== COUPLE SECTION ===== */
+.couple-section {
+  background: var(--bg-primary);
+}
+
+.couple-visual {
+  width: 100%;
+  height: 320px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+  background: var(--bg-card);
+}
+
+.couple-visual-inner {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 40%, rgba(168,85,247,0.3) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(236,72,153,0.25) 0%, transparent 50%),
+    radial-gradient(circle at 50% 80%, rgba(249,115,22,0.2) 0%, transparent 50%);
+  animation: coupleMesh 8s ease-in-out infinite;
+}
+
+@keyframes coupleMesh {
+  0%, 100% {
+    background:
+      radial-gradient(circle at 30% 40%, rgba(168,85,247,0.3) 0%, transparent 50%),
+      radial-gradient(circle at 70% 60%, rgba(236,72,153,0.25) 0%, transparent 50%),
+      radial-gradient(circle at 50% 80%, rgba(249,115,22,0.2) 0%, transparent 50%);
+  }
+  50% {
+    background:
+      radial-gradient(circle at 60% 30%, rgba(168,85,247,0.3) 0%, transparent 50%),
+      radial-gradient(circle at 40% 70%, rgba(236,72,153,0.25) 0%, transparent 50%),
+      radial-gradient(circle at 70% 50%, rgba(249,115,22,0.2) 0%, transparent 50%);
+  }
+}
+
+.couple-visual-text {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  z-index: 2;
+}
+
+.couple-visual-text .tag {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.5);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.couple-visual-text .tag .line {
+  width: 16px;
+  height: 1px;
+  background: rgba(255,255,255,0.3);
+}
+
+.couple-visual-silhouettes {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.silhouette {
+  border-radius: 50% 50% 0 0;
+  background: rgba(255,255,255,0.06);
+  backdrop-filter: blur(2px);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.silhouette-groom {
+  width: 80px;
+  height: 120px;
+}
+
+.silhouette-bride {
+  width: 75px;
+  height: 115px;
+}
+
+.couple-greeting {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.couple-greeting h3 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  background: var(--gradient-3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.couple-parents {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.parent-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 24px 16px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.parent-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.3), rgba(236,72,153,0.1), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.parent-card .role {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+
+.parent-card .parents-name {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+.parent-card .child-name {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  color: var(--text-primary);
+}
+
+.parent-card .child-label {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+/* ===== MESH GRADIENT DIVIDER ===== */
+.mesh-divider {
+  width: 100%;
+  height: 200px;
+  position: relative;
+  overflow: hidden;
+}
+
+.mesh-divider-inner {
+  position: absolute;
+  inset: -50px;
+  background: conic-gradient(from 180deg at 50% 50%,
+    #A855F7 0deg, #EC4899 72deg, #F97316 144deg,
+    #14B8A6 216deg, #3B82F6 288deg, #A855F7 360deg);
+  filter: blur(80px);
+  opacity: 0.25;
+  animation: meshRotate 20s linear infinite;
+}
+
+/* ===== CALENDAR SECTION ===== */
+.calendar-section {
+  background: var(--bg-primary);
+  text-align: center;
+}
+
+.calendar-header {
+  margin-bottom: 32px;
+}
+
+.calendar-header .month-year {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 2.5rem;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.calendar-header .year-sub {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 300;
+  font-size: 1rem;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+.calendar-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: 28px 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.calendar-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.15), rgba(249,115,22,0.1), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.calendar-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  margin-bottom: 12px;
+}
+
+.calendar-weekdays span {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--text-tertiary);
+  padding: 8px 0;
+}
+
+.calendar-weekdays span:first-child { color: rgba(236,72,153,0.6); }
+.calendar-weekdays span:last-child { color: rgba(96,165,250,0.5); }
+
+.calendar-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.calendar-day {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+  padding: 10px 0;
+  border-radius: 12px;
+  position: relative;
+}
+
+.calendar-day.empty { visibility: hidden; }
+
+.calendar-day.sunday { color: rgba(236,72,153,0.7); }
+.calendar-day.saturday { color: rgba(96,165,250,0.6); }
+
+.calendar-day.selected {
+  color: #fff;
+  font-weight: 600;
+  background: linear-gradient(135deg, #A855F7, #EC4899);
+  box-shadow: 0 4px 20px rgba(168,85,247,0.4), 0 2px 8px rgba(236,72,153,0.3);
+  animation: selectedPulse 3s ease-in-out infinite;
+}
+
+@keyframes selectedPulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(168,85,247,0.4), 0 2px 8px rgba(236,72,153,0.3); }
+  50% { box-shadow: 0 4px 30px rgba(168,85,247,0.6), 0 2px 12px rgba(236,72,153,0.5); }
+}
+
+.calendar-day.past { color: var(--text-tertiary); opacity: 0.4; }
+
+.countdown-wrap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 32px;
+}
+
+.countdown-item {
+  background: var(--bg-card);
+  border-radius: var(--radius-sm);
+  padding: 20px 8px;
+  position: relative;
+  overflow: hidden;
+}
+
+.countdown-item::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-sm);
+  padding: 1px;
+  background: linear-gradient(180deg, rgba(168,85,247,0.2), transparent);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+}
+
+.countdown-number {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  display: block;
+}
+
+.countdown-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-top: 4px;
+}
+
+.time-info {
+  margin-top: 28px;
+  padding: 20px;
+  background: rgba(168,85,247,0.06);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(168,85,247,0.1);
+}
+
+.time-info p {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+.time-info .time-highlight {
+  font-weight: 600;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ===== GALLERY SECTION ===== */
+.gallery-section {
+  background: var(--bg-primary);
+  padding: 80px 20px;
+}
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.bento-item {
+  border-radius: var(--radius-lg);
+  position: relative;
+  overflow: hidden;
+  min-height: 140px;
+  background: var(--bg-card);
+}
+
+.bento-item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 50%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.bento-item .bento-bg {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.bento-item:active .bento-bg {
+  transform: scale(1.05);
+}
+
+.bento-2x2 {
+  grid-column: span 2;
+  grid-row: span 2;
+  min-height: 290px;
+}
+
+.bento-1x2 {
+  grid-column: span 2;
+  min-height: 160px;
+}
+
+.bento-1x1 {
+  grid-column: span 2;
+  min-height: 180px;
+}
+
+.bento-full {
+  grid-column: span 4;
+  min-height: 200px;
+}
+
+/* Gallery gradient fills */
+.bento-item:nth-child(1) .bento-bg {
+  background:
+    radial-gradient(circle at 30% 30%, rgba(168,85,247,0.4), transparent 60%),
+    radial-gradient(circle at 70% 70%, rgba(236,72,153,0.3), transparent 60%),
+    linear-gradient(135deg, #1a1020 0%, #0d0d0d 100%);
+}
+
+.bento-item:nth-child(2) .bento-bg {
+  background:
+    radial-gradient(circle at 60% 40%, rgba(14,184,166,0.35), transparent 55%),
+    radial-gradient(circle at 30% 80%, rgba(59,130,246,0.25), transparent 55%),
+    linear-gradient(135deg, #0d1520 0%, #0d0d0d 100%);
+}
+
+.bento-item:nth-child(3) .bento-bg {
+  background:
+    radial-gradient(circle at 50% 50%, rgba(249,115,22,0.3), transparent 55%),
+    radial-gradient(circle at 20% 30%, rgba(251,191,36,0.2), transparent 50%),
+    linear-gradient(135deg, #1a1510 0%, #0d0d0d 100%);
+}
+
+.bento-item:nth-child(4) .bento-bg {
+  background:
+    radial-gradient(circle at 40% 60%, rgba(244,114,182,0.35), transparent 55%),
+    radial-gradient(circle at 80% 20%, rgba(167,139,250,0.25), transparent 55%),
+    linear-gradient(135deg, #1a1020 0%, #0d0d0d 100%);
+}
+
+.bento-item:nth-child(5) .bento-bg {
+  background:
+    conic-gradient(from 45deg at 50% 50%, rgba(168,85,247,0.3), rgba(236,72,153,0.2), rgba(249,115,22,0.2), rgba(168,85,247,0.3)),
+    linear-gradient(135deg, #151015 0%, #0d0d0d 100%);
+}
+
+.bento-item:nth-child(6) .bento-bg {
+  background:
+    radial-gradient(circle at 70% 30%, rgba(5,150,105,0.35), transparent 55%),
+    radial-gradient(circle at 30% 70%, rgba(14,184,166,0.25), transparent 55%),
+    linear-gradient(135deg, #0d1a15 0%, #0d0d0d 100%);
+}
+
+.bento-item:nth-child(7) .bento-bg {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(96,165,250,0.3), transparent 55%),
+    radial-gradient(circle at 20% 80%, rgba(168,85,247,0.2), transparent 50%),
+    linear-gradient(135deg, #0d1020 0%, #0d0d0d 100%);
+}
+
+.bento-label {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  z-index: 2;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bento-label .bento-dot {
+  width: 4px; height: 4px;
+  border-radius: 50%;
+  background: var(--gradient-1);
+}
+
+/* ===== VENUE SECTION ===== */
+.venue-section {
+  padding-top: 40px;
+}
+
+.venue-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  position: relative;
+}
+
+.venue-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-lg);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(14,184,166,0.3), rgba(59,130,246,0.15), transparent 60%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.venue-map-placeholder {
+  height: 220px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(14,184,166,0.15) 0%, transparent 60%),
+    linear-gradient(180deg, #1a1a1a 0%, #0f0f0f 100%);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-pin {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #14B8A6, #3B82F6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 30px rgba(14,184,166,0.4);
+  animation: pinBounce 2s ease-in-out infinite;
+}
+
+.map-pin::after {
+  content: '📍';
+  font-size: 1.4rem;
+}
+
+@keyframes pinBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.map-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 30px 30px;
+}
+
+.venue-info {
+  padding: 28px 24px;
+}
+
+.venue-name {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 4px;
+}
+
+.venue-hall {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 16px;
+}
+
+.venue-address {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.venue-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.venue-btn {
+  flex: 1;
+  padding: 14px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.venue-btn.primary {
+  background: linear-gradient(135deg, #14B8A6, #3B82F6);
+  color: white;
+}
+
+.venue-btn.primary:hover {
+  box-shadow: 0 4px 20px rgba(14,184,166,0.4);
+  transform: translateY(-1px);
+}
+
+.venue-btn.secondary {
+  background: rgba(255,255,255,0.06);
+  color: var(--text-secondary);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.venue-btn.secondary:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(255,255,255,0.15);
+}
+
+.transport-info {
+  margin-top: 24px;
+}
+
+.transport-item {
+  display: flex;
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.transport-item:last-child { border: none; }
+
+.transport-icon {
+  width: 40px; height: 40px;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.transport-details h4 {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 4px;
+}
+
+.transport-details p {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+  line-height: 1.5;
+}
+
+/* ===== ACCOUNT SECTION ===== */
+.account-section {
+  background: var(--bg-primary);
+}
+
+.account-tabs {
+  display: flex;
+  background: var(--bg-card);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 24px;
+  position: relative;
+}
+
+.account-tab {
+  flex: 1;
+  padding: 12px 16px;
+  border: none;
+  background: transparent;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 2;
+}
+
+.account-tab.active {
+  color: var(--text-primary);
+}
+
+.tab-slider {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(135deg, rgba(168,85,247,0.2), rgba(236,72,153,0.15));
+  border-radius: 10px;
+  border: 1px solid rgba(168,85,247,0.2);
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 1;
+}
+
+.tab-slider.right {
+  transform: translateX(100%);
+}
+
+.account-group {
+  display: none;
+}
+
+.account-group.active {
+  display: block;
+  animation: fadeUp 0.4s ease forwards;
+}
+
+.account-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease;
+}
+
+.account-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: var(--radius-md);
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), transparent 50%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.account-card:active {
+  background: var(--bg-card-hover);
+}
+
+.account-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.account-card-header .relation {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 0.8rem;
+  color: var(--text-tertiary);
+}
+
+.account-card-header .name {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-primary);
+}
+
+.account-number {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,0.03);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+
+.account-number .bank-info {
+  font-family: 'DM Sans', 'Noto Sans KR', sans-serif;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.copy-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(236,72,153,0.1));
+  color: var(--purple);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.copy-btn:hover {
+  background: linear-gradient(135deg, rgba(168,85,247,0.25), rgba(236,72,153,0.2));
+}
+
+.copy-btn.copied {
+  background: linear-gradient(135deg, rgba(5,150,105,0.2), rgba(14,184,166,0.15));
+  color: var(--teal);
+}
+
+.copy-btn.copied::after {
+  content: '✓';
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: inherit;
+  border-radius: inherit;
+  animation: copyPop 0.3s ease;
+}
+
+@keyframes copyPop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* ===== RSVP / GUESTBOOK ===== */
+.rsvp-section {
+  background: var(--bg-primary);
+  position: relative;
+  overflow: hidden;
+}
+
+.rsvp-mesh {
+  position: absolute;
+  width: 300px; height: 300px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: conic-gradient(from 90deg, rgba(168,85,247,0.15), rgba(236,72,153,0.1), rgba(14,184,166,0.1), rgba(168,85,247,0.15));
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+
+.rsvp-form {
+  position: relative;
+  z-index: 2;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-group label {
+  display: block;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+
+.form-input {
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--bg-card);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.9rem;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.form-input:focus {
+  border-color: rgba(168,85,247,0.4);
+  box-shadow: 0 0 0 3px rgba(168,85,247,0.08);
+}
+
+.form-input::placeholder {
+  color: var(--text-tertiary);
+}
+
+textarea.form-input {
+  min-height: 120px;
+  resize: none;
+  line-height: 1.7;
+}
+
+.attendance-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.attendance-option {
+  flex: 1;
+  padding: 14px;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--radius-sm);
+  background: var(--bg-card);
+  color: var(--text-tertiary);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.85rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.attendance-option.selected {
+  border-color: var(--purple);
+  background: rgba(168,85,247,0.08);
+  color: var(--text-primary);
+  box-shadow: 0 0 20px rgba(168,85,247,0.1);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(135deg, #A855F7, #EC4899, #F97316);
+  background-size: 200% 200%;
+  color: white;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s ease;
+  animation: gradientShift 4s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.submit-btn:hover {
+  box-shadow: 0 8px 30px rgba(168,85,247,0.4);
+  transform: translateY(-2px);
+}
+
+.submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Guestbook messages */
+.guestbook-messages {
+  margin-top: 40px;
+}
+
+.guestbook-messages h3 {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.guestbook-messages h3 .count {
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+}
+
+.message-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-md);
+  padding: 20px;
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+
+.message-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--gradient-1);
+  border-radius: 0 3px 3px 0;
+}
+
+.message-author {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 500;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.message-text {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+.message-date {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.7rem;
+  color: var(--text-tertiary);
+  margin-top: 8px;
+}
+
+/* ===== FOOTER ===== */
+.footer-section {
+  text-align: center;
+  padding: 60px 28px 80px;
+  position: relative;
+}
+
+.footer-mesh {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px; height: 200px;
+  background: conic-gradient(from 0deg at 50% 100%,
+    rgba(168,85,247,0.15), rgba(236,72,153,0.1), rgba(249,115,22,0.08),
+    rgba(14,184,166,0.1), rgba(59,130,246,0.08), rgba(168,85,247,0.15));
+  filter: blur(60px);
+  pointer-events: none;
+}
+
+.footer-names {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.8rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-names .footer-amp {
+  font-weight: 300;
+  background: var(--gradient-1);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 8px;
+}
+
+.footer-date {
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  color: var(--text-tertiary);
+  margin-bottom: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-thankyou {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-weight: 300;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-divider {
+  width: 40px;
+  height: 2px;
+  background: var(--gradient-1);
+  margin: 24px auto;
+  border-radius: 2px;
+  position: relative;
+  z-index: 2;
+}
+
+.footer-credit {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-top: 40px;
+  position: relative;
+  z-index: 2;
+}
+
+/* ===== TOAST NOTIFICATION ===== */
+.toast {
+  position: fixed;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  padding: 14px 28px;
+  border-radius: 100px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 0.85rem;
+  z-index: 1000;
+  transition: bottom 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border: 1px solid rgba(168,85,247,0.2);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+  white-space: nowrap;
+}
+
+.toast.show {
+  bottom: 40px;
+}
+
+/* ===== LETTER SECTION (Invitation Letter) ===== */
+.letter-section {
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.letter-ornament {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(168,85,247,0.4), transparent);
+  margin: 0 auto 32px;
+}
+
+.letter-quote {
+  font-family: 'DM Sans', sans-serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 1rem;
+  color: var(--text-tertiary);
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+/* ===== SCROLL PROGRESS ===== */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  height: 2px;
+  background: transparent;
+  z-index: 100;
+}
+
+.scroll-progress-bar {
+  height: 100%;
+  width: 0%;
+  background: var(--gradient-1);
+  transition: width 0.1s linear;
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes floatIn {
+  0% { opacity: 0; transform: translateY(60px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
+.stagger-5 { animation-delay: 0.5s; }
+
+/* Bento hover glow */
+.bento-item::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: calc(var(--radius-lg) + 2px);
+  background: var(--gradient-1);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.4s ease;
+  filter: blur(8px);
+}
+
+.bento-item:hover::before,
+.bento-item:active::before {
+  opacity: 0.2;
+}
+
+/* Glowing text */
+.glow-text {
+  text-shadow: 0 0 40px rgba(168,85,247,0.3), 0 0 80px rgba(236,72,153,0.15);
+}
+
+/* ===== LOADING SCREEN ===== */
+.loading-screen {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-primary);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.loading-ring {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.05);
+  border-top-color: var(--purple);
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+</style>
+</head>
+<body>
+
+<!-- Loading Screen -->
+<div class="loading-screen" id="loadingScreen">
+  <div class="loading-ring"></div>
+  <div class="loading-text">Loading Invitation</div>
+</div>
+
+<!-- Scroll Progress -->
+<div class="scroll-progress">
+  <div class="scroll-progress-bar" id="scrollProgress"></div>
+</div>
+
+<div class="invitation-wrap" id="invitationWrap">
+
+  <!-- Floating Orbs -->
+  <div class="orb orb-1" id="orb1"></div>
+  <div class="orb orb-2" id="orb2"></div>
+  <div class="orb orb-3" id="orb3"></div>
+  <div class="orb orb-4" id="orb4"></div>
+  <div class="orb orb-5" id="orb5"></div>
+  <div class="orb orb-6" id="orb6"></div>
+
+  <!-- ===== HERO ===== -->
+  <section class="hero">
+    <div class="hero-mesh"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">Wedding Invitation</div>
+      <div class="hero-date-badge">
+        <span class="dot"></span>
+        <span>2026. 09. 12 SAT PM 2:00</span>
+      </div>
+      <div class="hero-names glow-text">
+        <span class="name">Doyun</span>
+        <span class="amp">&</span>
+        <span class="name">Seoyeon</span>
+      </div>
+      <div class="hero-korean-names">김도윤 그리고 이서연</div>
+    </div>
+    <div class="hero-scroll-indicator">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ===== COUPLE / INVITATION LETTER ===== -->
+  <section class="couple-section letter-section">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="label-text">Invitation</span>
+      </div>
+    </div>
+
+    <div class="couple-visual reveal reveal-delay-1">
+      <div class="couple-visual-inner"></div>
+      <div class="couple-visual-silhouettes">
+        <div class="silhouette silhouette-groom"></div>
+        <div class="silhouette silhouette-bride"></div>
+      </div>
+      <div class="couple-visual-text">
+        <div class="tag"><span class="line"></span> Our beginning</div>
+      </div>
+    </div>
+
+    <div class="couple-greeting reveal reveal-delay-2">
+      <h3>소중한 분들을 초대합니다</h3>
+      <p class="body-text">
+        서로 다른 길을 걸어온 두 사람이<br>
+        같은 곳을 바라보며<br>
+        이제 하나의 길을 걷고자 합니다.<br><br>
+        저희의 새로운 시작을<br>
+        함께 축복해 주시면 감사하겠습니다.
+      </p>
+    </div>
+
+    <div class="letter-ornament reveal reveal-delay-3"></div>
+
+    <p class="letter-quote reveal reveal-delay-3">
+      "Two souls with but a single thought,<br>
+      two hearts that beat as one."
+    </p>
+
+    <div class="couple-parents reveal reveal-delay-4">
+      <div class="parent-card">
+        <div class="role">Groom</div>
+        <div class="parents-name">김영수 · 박미정<br>의 아들</div>
+        <div class="child-name">도윤</div>
+      </div>
+      <div class="parent-card">
+        <div class="role">Bride</div>
+        <div class="parents-name">이진호 · 최수연<br>의 딸</div>
+        <div class="child-name">서연</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Mesh Divider -->
+  <div class="mesh-divider">
+    <div class="mesh-divider-inner"></div>
+  </div>
+
+  <!-- ===== CALENDAR ===== -->
+  <section class="calendar-section">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="label-text">Wedding Day</span>
+      </div>
+    </div>
+
+    <div class="calendar-header reveal reveal-delay-1">
+      <div class="month-year">September</div>
+      <div class="year-sub">2026</div>
+    </div>
+
+    <div class="calendar-card reveal reveal-delay-2">
+      <div class="calendar-weekdays">
+        <span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span>
+      </div>
+      <div class="calendar-days">
+        <!-- Row 1: Sept starts on Tuesday -->
+        <div class="calendar-day empty"></div>
+        <div class="calendar-day empty"></div>
+        <div class="calendar-day">1</div>
+        <div class="calendar-day">2</div>
+        <div class="calendar-day">3</div>
+        <div class="calendar-day">4</div>
+        <div class="calendar-day saturday">5</div>
+        <!-- Row 2 -->
+        <div class="calendar-day sunday">6</div>
+        <div class="calendar-day">7</div>
+        <div class="calendar-day">8</div>
+        <div class="calendar-day">9</div>
+        <div class="calendar-day">10</div>
+        <div class="calendar-day">11</div>
+        <div class="calendar-day selected saturday">12</div>
+        <!-- Row 3 -->
+        <div class="calendar-day sunday">13</div>
+        <div class="calendar-day">14</div>
+        <div class="calendar-day">15</div>
+        <div class="calendar-day">16</div>
+        <div class="calendar-day">17</div>
+        <div class="calendar-day">18</div>
+        <div class="calendar-day saturday">19</div>
+        <!-- Row 4 -->
+        <div class="calendar-day sunday">20</div>
+        <div class="calendar-day">21</div>
+        <div class="calendar-day">22</div>
+        <div class="calendar-day">23</div>
+        <div class="calendar-day">24</div>
+        <div class="calendar-day">25</div>
+        <div class="calendar-day saturday">26</div>
+        <!-- Row 5 -->
+        <div class="calendar-day sunday">27</div>
+        <div class="calendar-day">28</div>
+        <div class="calendar-day">29</div>
+        <div class="calendar-day">30</div>
+        <div class="calendar-day empty"></div>
+        <div class="calendar-day empty"></div>
+        <div class="calendar-day empty"></div>
+      </div>
+    </div>
+
+    <div class="time-info reveal reveal-delay-3">
+      <p>2026년 9월 12일 토요일 <span class="time-highlight">오후 2시</span></p>
+      <p style="font-size:0.85rem; color: var(--text-tertiary); margin-top: 4px;">그랜드 하얏트 서울 그랜드볼룸</p>
+    </div>
+
+    <div class="countdown-wrap reveal reveal-delay-4">
+      <div class="countdown-item">
+        <span class="countdown-number" id="countDays">---</span>
+        <span class="countdown-label">Days</span>
+      </div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="countHours">--</span>
+        <span class="countdown-label">Hours</span>
+      </div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="countMins">--</span>
+        <span class="countdown-label">Mins</span>
+      </div>
+      <div class="countdown-item">
+        <span class="countdown-number" id="countSecs">--</span>
+        <span class="countdown-label">Secs</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== GALLERY ===== -->
+  <section class="gallery-section">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="label-text">Gallery</span>
+      </div>
+      <h2 class="heading-lg" style="margin-bottom:8px;">Our Moments</h2>
+      <p class="body-text" style="margin-bottom:0;">함께한 순간들을 모았습니다</p>
+    </div>
+
+    <div class="bento-grid">
+      <div class="bento-item bento-2x2 reveal">
+        <div class="bento-bg"></div>
+        <div class="bento-label"><span class="bento-dot"></span> First Date</div>
+      </div>
+      <div class="bento-item bento-1x1 reveal reveal-delay-1">
+        <div class="bento-bg"></div>
+        <div class="bento-label"><span class="bento-dot"></span> Travel</div>
+      </div>
+      <div class="bento-item bento-1x1 reveal reveal-delay-2">
+        <div class="bento-bg"></div>
+        <div class="bento-label"><span class="bento-dot"></span> Proposal</div>
+      </div>
+      <div class="bento-item bento-1x2 reveal reveal-delay-1">
+        <div class="bento-bg"></div>
+        <div class="bento-label"><span class="bento-dot"></span> Together</div>
+      </div>
+      <div class="bento-item bento-full reveal reveal-delay-2">
+        <div class="bento-bg"></div>
+        <div class="bento-label"><span class="bento-dot"></span> Pre-Wedding</div>
+      </div>
+      <div class="bento-item bento-1x1 reveal reveal-delay-1">
+        <div class="bento-bg"></div>
+        <div class="bento-label"><span class="bento-dot"></span> Everyday</div>
+      </div>
+      <div class="bento-item bento-1x1 reveal reveal-delay-2">
+        <div class="bento-bg"></div>
+        <div class="bento-label"><span class="bento-dot"></span> Us</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== VENUE ===== -->
+  <section class="venue-section">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="label-text">Location</span>
+      </div>
+      <h2 class="heading-lg" style="margin-bottom:24px;">오시는 길</h2>
+    </div>
+
+    <div class="venue-card reveal reveal-delay-1">
+      <div class="venue-map-placeholder">
+        <div class="map-grid"></div>
+        <div class="map-pin"></div>
+      </div>
+      <div class="venue-info">
+        <div class="venue-name">그랜드 하얏트 서울</div>
+        <div class="venue-hall">그랜드볼룸 Grand Ballroom</div>
+        <div class="venue-address">서울특별시 용산구 소월로 322</div>
+        <div class="venue-buttons">
+          <button class="venue-btn primary" onclick="showToast('네이버 지도로 이동합니다')">네이버 지도</button>
+          <button class="venue-btn secondary" onclick="showToast('카카오맵으로 이동합니다')">카카오맵</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="transport-info reveal reveal-delay-2">
+      <div class="transport-item">
+        <div class="transport-icon">🚇</div>
+        <div class="transport-details">
+          <h4>지하철</h4>
+          <p>6호선 녹사평역 1번 출구 셔틀버스 5분<br>1호선 남영역 도보 15분</p>
+        </div>
+      </div>
+      <div class="transport-item">
+        <div class="transport-icon">🚗</div>
+        <div class="transport-details">
+          <h4>자가용</h4>
+          <p>호텔 주차장 이용 가능 (3시간 무료)<br>네비게이션 "그랜드 하얏트 서울" 검색</p>
+        </div>
+      </div>
+      <div class="transport-item">
+        <div class="transport-icon">🚌</div>
+        <div class="transport-details">
+          <h4>셔틀버스</h4>
+          <p>녹사평역 1번 출구에서 10분 간격 운행<br>오후 1시 ~ 오후 2시 30분</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== ACCOUNT ===== -->
+  <section class="account-section">
+    <div class="reveal">
+      <div class="section-label">
+        <span class="label-text">Gift</span>
+      </div>
+      <h2 class="heading-lg" style="margin-bottom: 8px;">마음 전하기</h2>
+      <p class="body-text" style="margin-bottom: 28px;">축하의 마음을 전해주세요</p>
+    </div>
+
+    <div class="account-tabs reveal reveal-delay-1" id="accountTabs">
+      <div class="tab-slider" id="tabSlider"></div>
+      <button class="account-tab active" onclick="switchTab('groom')">신랑측</button>
+      <button class="account-tab" onclick="switchTab('bride')">신부측</button>
+    </div>
+
+    <div class="account-group active" id="groomAccounts">
+      <div class="account-card reveal reveal-delay-2">
+        <div class="account-card-header">
+          <div>
+            <span class="relation">신랑</span>
+            <span class="name" style="margin-left:8px;">김도윤</span>
+          </div>
+        </div>
+        <div class="account-number">
+          <span class="bank-info">국민은행 123-456-789012</span>
+          <button class="copy-btn" onclick="copyAccount(this, '123-456-789012')">복사</button>
+        </div>
+      </div>
+      <div class="account-card reveal reveal-delay-3">
+        <div class="account-card-header">
+          <div>
+            <span class="relation">아버지</span>
+            <span class="name" style="margin-left:8px;">김영수</span>
+          </div>
+        </div>
+        <div class="account-number">
+          <span class="bank-info">신한은행 110-234-567890</span>
+          <button class="copy-btn" onclick="copyAccount(this, '110-234-567890')">복사</button>
+        </div>
+      </div>
+      <div class="account-card reveal reveal-delay-4">
+        <div class="account-card-header">
+          <div>
+            <span class="relation">어머니</span>
+            <span class="name" style="margin-left:8px;">박미정</span>
+          </div>
+        </div>
+        <div class="account-number">
+          <span class="bank-info">우리은행 1002-345-678901</span>
+          <button class="copy-btn" onclick="copyAccount(this, '1002-345-678901')">복사</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="account-group" id="brideAccounts">
+      <div class="account-card">
+        <div class="account-card-header">
+          <div>
+            <span class="relation">신부</span>
+            <span class="name" style="margin-left:8px;">이서연</span>
+          </div>
+        </div>
+        <div class="account-number">
+          <span class="bank-info">카카오뱅크 3333-12-3456789</span>
+          <button class="copy-btn" onclick="copyAccount(this, '3333-12-3456789')">복사</button>
+        </div>
+      </div>
+      <div class="account-card">
+        <div class="account-card-header">
+          <div>
+            <span class="relation">아버지</span>
+            <span class="name" style="margin-left:8px;">이진호</span>
+          </div>
+        </div>
+        <div class="account-number">
+          <span class="bank-info">하나은행 267-890-123456</span>
+          <button class="copy-btn" onclick="copyAccount(this, '267-890-123456')">복사</button>
+        </div>
+      </div>
+      <div class="account-card">
+        <div class="account-card-header">
+          <div>
+            <span class="relation">어머니</span>
+            <span class="name" style="margin-left:8px;">최수연</span>
+          </div>
+        </div>
+        <div class="account-number">
+          <span class="bank-info">농협은행 302-1234-5678-91</span>
+          <button class="copy-btn" onclick="copyAccount(this, '302-1234-5678-91')">복사</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== RSVP / GUESTBOOK ===== -->
+  <section class="rsvp-section">
+    <div class="rsvp-mesh"></div>
+
+    <div class="reveal">
+      <div class="section-label">
+        <span class="label-text">RSVP</span>
+      </div>
+      <h2 class="heading-lg" style="margin-bottom: 8px;">참석 여부</h2>
+      <p class="body-text" style="margin-bottom: 32px;">참석 여부를 알려주시면 감사하겠습니다</p>
+    </div>
+
+    <form class="rsvp-form" onsubmit="submitRSVP(event)">
+      <div class="form-group reveal reveal-delay-1">
+        <label>성함 Name</label>
+        <input type="text" class="form-input" placeholder="성함을 입력해주세요" required>
+      </div>
+
+      <div class="form-group reveal reveal-delay-2">
+        <label>참석 여부 Attendance</label>
+        <div class="attendance-options">
+          <div class="attendance-option selected" onclick="selectAttendance(this)">참석할게요 🎉</div>
+          <div class="attendance-option" onclick="selectAttendance(this)">참석 어려워요 🥲</div>
+        </div>
+      </div>
+
+      <div class="form-group reveal reveal-delay-3">
+        <label>참석 인원 Guests</label>
+        <input type="number" class="form-input" placeholder="참석 인원을 입력해주세요" min="1" max="10" value="1">
+      </div>
+
+      <div class="form-group reveal reveal-delay-3">
+        <label>축하 메시지 Message</label>
+        <textarea class="form-input" placeholder="축하의 메시지를 남겨주세요"></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn reveal reveal-delay-4">전송하기</button>
+    </form>
+
+    <div class="guestbook-messages reveal">
+      <h3>방명록 <span class="count">3</span></h3>
+
+      <div class="message-card">
+        <div class="message-author">박지민</div>
+        <div class="message-text">결혼 축하해! 두 분의 앞날에 언제나 행복만 가득하길 바라요 💜</div>
+        <div class="message-date">2026.06.01</div>
+      </div>
+
+      <div class="message-card">
+        <div class="message-author">정현우</div>
+        <div class="message-text">도윤아 축하한다! 좋은 사람 만났구나. 행복하게 살아!</div>
+        <div class="message-date">2026.05.28</div>
+      </div>
+
+      <div class="message-card">
+        <div class="message-author">한소라</div>
+        <div class="message-text">서연언니 결혼 너무 축하해요! 꼭 갈게요 🥰</div>
+        <div class="message-date">2026.05.25</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <section class="footer-section">
+    <div class="footer-mesh"></div>
+    <div class="reveal">
+      <div class="footer-names">
+        Doyun <span class="footer-amp">&</span> Seoyeon
+      </div>
+      <div class="footer-date">2026. 09. 12. Saturday</div>
+      <div class="footer-divider"></div>
+      <p class="footer-thankyou">
+        함께해 주셔서 감사합니다<br>
+        <span style="font-size:0.8rem; color: var(--text-tertiary);">Thank you for being part of our story</span>
+      </p>
+      <div class="footer-credit">Made with ♥</div>
+    </div>
+  </section>
+
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== LOADING SCREEN =====
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loadingScreen').classList.add('hidden');
+  }, 800);
+});
+
+// ===== SCROLL PROGRESS =====
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const scrollPercent = (scrollTop / docHeight) * 100;
+  document.getElementById('scrollProgress').style.width = scrollPercent + '%';
+});
+
+// ===== INTERSECTION OBSERVER (Reveal on Scroll) =====
+const observerOptions = {
+  threshold: 0.15,
+  rootMargin: '0px 0px -40px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// ===== PARALLAX ORBS ON SCROLL =====
+let ticking = false;
+window.addEventListener('scroll', () => {
+  if (!ticking) {
+    requestAnimationFrame(() => {
+      const scrollY = window.scrollY;
+      const orbs = document.querySelectorAll('.orb');
+      orbs.forEach((orb, i) => {
+        const speed = 0.03 + (i * 0.015);
+        const direction = i % 2 === 0 ? 1 : -1;
+        orb.style.transform = `translateY(${scrollY * speed * direction}px)`;
+      });
+      ticking = false;
+    });
+    ticking = true;
+  }
+});
+
+// ===== COUNTDOWN TIMER =====
+function updateCountdown() {
+  const weddingDate = new Date('2026-09-12T14:00:00+09:00');
+  const now = new Date();
+  const diff = weddingDate - now;
+
+  if (diff <= 0) {
+    document.getElementById('countDays').textContent = '0';
+    document.getElementById('countHours').textContent = '0';
+    document.getElementById('countMins').textContent = '0';
+    document.getElementById('countSecs').textContent = '0';
+    return;
+  }
+
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+  const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+  document.getElementById('countDays').textContent = days;
+  document.getElementById('countHours').textContent = String(hours).padStart(2, '0');
+  document.getElementById('countMins').textContent = String(mins).padStart(2, '0');
+  document.getElementById('countSecs').textContent = String(secs).padStart(2, '0');
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// ===== ACCOUNT TABS =====
+function switchTab(tab) {
+  const tabs = document.querySelectorAll('.account-tab');
+  const groomGroup = document.getElementById('groomAccounts');
+  const brideGroup = document.getElementById('brideAccounts');
+  const slider = document.getElementById('tabSlider');
+
+  tabs.forEach(t => t.classList.remove('active'));
+
+  if (tab === 'groom') {
+    tabs[0].classList.add('active');
+    groomGroup.classList.add('active');
+    brideGroup.classList.remove('active');
+    slider.classList.remove('right');
+  } else {
+    tabs[1].classList.add('active');
+    brideGroup.classList.add('active');
+    groomGroup.classList.remove('active');
+    slider.classList.add('right');
+  }
+}
+
+// ===== COPY TO CLIPBOARD =====
+function copyAccount(btn, accountNumber) {
+  navigator.clipboard.writeText(accountNumber).then(() => {
+    btn.classList.add('copied');
+    btn.textContent = '';
+    showToast('계좌번호가 복사되었습니다');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '복사';
+    }, 2000);
+  }).catch(() => {
+    // Fallback
+    const textarea = document.createElement('textarea');
+    textarea.value = accountNumber;
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textarea);
+    btn.classList.add('copied');
+    btn.textContent = '';
+    showToast('계좌번호가 복사되었습니다');
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '복사';
+    }, 2000);
+  });
+}
+
+// ===== TOAST =====
+let toastTimer;
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  toast.textContent = message;
+  toast.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 2500);
+}
+
+// ===== ATTENDANCE TOGGLE =====
+function selectAttendance(selected) {
+  document.querySelectorAll('.attendance-option').forEach(opt => {
+    opt.classList.remove('selected');
+  });
+  selected.classList.add('selected');
+}
+
+// ===== SUBMIT RSVP =====
+function submitRSVP(e) {
+  e.preventDefault();
+  showToast('감사합니다! 참석 정보가 전송되었습니다 ✨');
+
+  // Reset form
+  setTimeout(() => {
+    e.target.reset();
+  }, 500);
+}
+
+// ===== HERO PARALLAX ON SCROLL =====
+window.addEventListener('scroll', () => {
+  const hero = document.querySelector('.hero');
+  const heroContent = document.querySelector('.hero-content');
+  const heroMesh = document.querySelector('.hero-mesh');
+  const scrollY = window.scrollY;
+  const heroHeight = hero.offsetHeight;
+
+  if (scrollY < heroHeight) {
+    const progress = scrollY / heroHeight;
+    heroContent.style.transform = `translateY(${scrollY * 0.3}px)`;
+    heroContent.style.opacity = 1 - progress * 1.2;
+    heroMesh.style.transform = `translate(-50%, -50%) rotate(${scrollY * 0.05}deg) scale(${1 + progress * 0.3})`;
+  }
+});
+
+</script>
+</body>
+</html>

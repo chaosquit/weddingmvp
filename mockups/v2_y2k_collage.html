@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Y2K Wedding - Doyun & Seoyeon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;700&family=Syne:wght@700;800&family=Noto+Sans+KR:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #E2E8F0; /* Cool light gray */
+            --accent-green: #39FF14; /* Neon green */
+            --accent-pink: #FF1493; /* Neon pink */
+            --text-dark: #0F172A;
+            --font-display: 'Syne', sans-serif;
+            --font-body: 'Space Grotesk', sans-serif;
+            --font-ko: 'Noto Sans KR', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            background-image: radial-gradient(var(--text-dark) 1px, transparent 1px);
+            background-size: 20px 20px; /* Dot grid background */
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            position: relative;
+            min-height: 100vh;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        /* Hero */
+        .hero {
+            height: 90vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .title-y2k {
+            font-family: var(--font-display);
+            font-size: 4rem;
+            line-height: 0.9;
+            text-transform: uppercase;
+            color: var(--text-dark);
+            z-index: 10;
+            position: relative;
+            text-shadow: 4px 4px 0px var(--accent-green);
+        }
+
+        /* Cutout Photo */
+        .cutout {
+            position: absolute;
+            top: 20%;
+            right: -20px;
+            width: 250px;
+            height: 350px;
+            background-image: url('https://images.unsplash.com/photo-1623091410901-00e2d268901f?q=80&w=800&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            clip-path: polygon(10% 0, 100% 5%, 90% 100%, 0% 95%);
+            z-index: 5;
+            filter: drop-shadow(5px 5px 0px var(--accent-pink));
+        }
+
+        /* Stickers */
+        .sticker {
+            position: absolute;
+            background: var(--text-dark);
+            color: var(--accent-green);
+            font-family: var(--font-display);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            transform: rotate(-15deg);
+            z-index: 20;
+            border: 2px solid var(--accent-green);
+        }
+        .st-1 { top: 15%; left: 10%; }
+        .st-2 { bottom: 20%; right: 10%; transform: rotate(10deg); background: var(--accent-pink); color: #fff; border-color: var(--text-dark); }
+
+        /* Window Style Card */
+        .window-card {
+            background: #fff;
+            border: 3px solid var(--text-dark);
+            border-radius: 10px;
+            box-shadow: 8px 8px 0px var(--text-dark);
+            margin: 40px 0;
+            overflow: hidden;
+        }
+        .window-header {
+            background: var(--text-dark);
+            color: #fff;
+            padding: 8px 15px;
+            font-family: var(--font-body);
+            font-size: 0.9rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .window-content {
+            padding: 30px;
+            font-family: var(--font-ko);
+            font-size: 1rem;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        /* Y2K Button */
+        .y2k-btn {
+            display: inline-block;
+            background: var(--accent-green);
+            color: var(--text-dark);
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            padding: 15px 30px;
+            border: 3px solid var(--text-dark);
+            border-radius: 50px;
+            box-shadow: 5px 5px 0px var(--text-dark);
+            text-decoration: none;
+            text-align: center;
+            width: 100%;
+            margin-top: 20px;
+            transition: transform 0.1s, box-shadow 0.1s;
+            cursor: pointer;
+        }
+        .y2k-btn:active {
+            transform: translate(5px, 5px);
+            box-shadow: 0px 0px 0px var(--text-dark);
+        }
+
+        /* Floating elements animation */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        
+        <section class="hero">
+            <div class="sticker st-1 animate-float">4EVER!</div>
+            <h1 class="title-y2k">
+                WE<br>ARE<br>TYING<br>THE<br>KNOT
+            </h1>
+            <div class="cutout"></div>
+            <div class="sticker st-2 animate-float" style="animation-delay: -2s;">EST. 2026</div>
+        </section>
+
+        <div class="window-card">
+            <div class="window-header">
+                <span>invite.exe</span>
+                <span>_ ㅁ x</span>
+            </div>
+            <div class="window-content">
+                <strong>김도윤 & 이서연</strong><br>
+                우리 드디어 결혼합니다!<br>
+                가장 힙하고 신나는 파티에<br>
+                여러분을 초대합니다.
+            </div>
+        </div>
+
+        <div class="window-card" style="border-radius:0;">
+            <div class="window-header" style="background:var(--accent-pink);">
+                <span>location.sys</span>
+                <span>_ ㅁ x</span>
+            </div>
+            <div class="window-content">
+                <strong style="font-family:var(--font-display); font-size:2rem;">SEP 12</strong><br>
+                SATURDAY PM 2:00<br><br>
+                <strong>그랜드 하얏트 서울</strong>
+            </div>
+        </div>
+
+        <button class="y2k-btn">RSVP HERE &rarr;</button>
+
+    </div>
+</body>
+</html>

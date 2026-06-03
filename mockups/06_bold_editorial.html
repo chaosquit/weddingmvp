@@ -1,0 +1,2482 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>DOYUN & SEOYEON — THE WEDDING ISSUE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Noto+Sans+KR:wght@300;400;500;700;900&family=Oswald:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --black: #000000;
+  --white: #FFFFFF;
+  --accent: #E63946;
+  --accent-yellow: #FFD700;
+  --gray: #888888;
+  --light-gray: #E5E5E5;
+  --dark-gray: #1A1A1A;
+  --off-white: #F5F5F0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+  max-width: 430px;
+  margin: 0 auto;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* === NOISE / GRAIN TEXTURE OVERLAY === */
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 430px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-size: 128px 128px;
+}
+
+/* Second grain layer for depth */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 430px;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.03;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255,255,255,0.03) 2px,
+    rgba(255,255,255,0.03) 4px
+  );
+}
+
+/* === MARQUEE TICKER === */
+.ticker-wrap {
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 430px;
+  max-width: 100%;
+  height: 32px;
+  background: var(--accent);
+  z-index: 1000;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+}
+
+.ticker {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker 20s linear infinite;
+}
+
+.ticker span {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  color: var(--white);
+  padding: 0 40px;
+  text-transform: uppercase;
+}
+
+.ticker span::after {
+  content: '✦';
+  margin-left: 40px;
+  font-size: 8px;
+  vertical-align: middle;
+}
+
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* === VERTICAL SIDE LABELS === */
+.side-label {
+  position: fixed;
+  z-index: 100;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.25);
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+}
+
+.side-label-left {
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.side-label-right {
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%) rotate(180deg);
+}
+
+/* === HERO SECTION === */
+.hero {
+  position: relative;
+  height: 100vh;
+  min-height: 700px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  padding-top: 32px;
+  background: var(--black);
+}
+
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: 
+    linear-gradient(135deg, #2c1810 0%, #1a0a06 30%, #0d0d0d 60%, #1a1a2e 100%);
+  opacity: 0.6;
+}
+
+.hero-photo-abstract {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 280px;
+  height: 380px;
+  background: linear-gradient(
+    170deg,
+    #d4a574 0%,
+    #c4956a 20%,
+    #b8876a 40%,
+    #9c7565 60%,
+    #7a5c50 80%,
+    #5a3e35 100%
+  );
+  opacity: 0.5;
+  filter: contrast(1.1) brightness(0.9);
+}
+
+.hero-wedding-text {
+  position: relative;
+  z-index: 10;
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(100px, 28vw, 140px);
+  line-height: 0.85;
+  text-transform: uppercase;
+  letter-spacing: -4px;
+  text-align: center;
+  color: var(--white);
+  mix-blend-mode: difference;
+  user-select: none;
+}
+
+.hero-wedding-text .letter {
+  display: inline-block;
+  opacity: 0;
+  transform: translateY(80px);
+  animation: letterReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes letterReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-issue-badge {
+  position: absolute;
+  top: 60px;
+  right: 20px;
+  z-index: 20;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-transform: uppercase;
+  border: 1px solid var(--accent);
+  padding: 6px 12px;
+  transform: rotate(3deg);
+}
+
+.hero-subtitle {
+  position: relative;
+  z-index: 10;
+  margin-top: 30px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 12px;
+  text-transform: uppercase;
+  color: var(--white);
+  opacity: 0;
+  animation: fadeUp 1s 1.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-date-line {
+  position: absolute;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 16px;
+  letter-spacing: 6px;
+  color: var(--accent);
+  opacity: 0;
+  animation: fadeUp 1s 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-scroll-indicator {
+  position: absolute;
+  bottom: 15px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  animation: fadeUp 1s 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hero-scroll-indicator span {
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.4);
+}
+
+.hero-scroll-indicator .scroll-line {
+  width: 1px;
+  height: 30px;
+  background: var(--accent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+@keyframes scrollPulse {
+  0%, 100% { transform: scaleY(1); opacity: 1; }
+  50% { transform: scaleY(0.4); opacity: 0.3; }
+}
+
+.hero-vertical-text {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  writing-mode: vertical-rl;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.2);
+}
+
+.hero-tag {
+  position: absolute;
+  top: 55px;
+  left: 20px;
+  z-index: 20;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: var(--accent-yellow);
+  background: rgba(0,0,0,0.6);
+  padding: 4px 10px;
+}
+
+/* === EDITORIAL TAG STYLES === */
+.editorial-tag {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  display: inline-block;
+}
+
+.section-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  color: rgba(255,255,255,0.3);
+  letter-spacing: 2px;
+}
+
+/* === COUPLE SECTION === */
+.section-couple {
+  position: relative;
+  background: var(--white);
+  color: var(--black);
+  padding: 80px 0 60px;
+  overflow: hidden;
+}
+
+.couple-header {
+  padding: 0 25px;
+  margin-bottom: 50px;
+}
+
+.couple-header .section-number {
+  color: rgba(0,0,0,0.2);
+}
+
+.couple-header .editorial-tag {
+  margin-top: 8px;
+  margin-bottom: 15px;
+}
+
+.couple-header h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(50px, 16vw, 72px);
+  line-height: 0.9;
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  color: var(--black);
+}
+
+.couple-header h2 .accent {
+  color: var(--accent);
+  display: block;
+}
+
+.couple-rotated-text {
+  position: absolute;
+  right: -20px;
+  top: 100px;
+  font-family: 'Oswald', sans-serif;
+  font-size: 100px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.04);
+  transform: rotate(-90deg);
+  transform-origin: right top;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.couple-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.couple-card {
+  position: relative;
+  padding: 30px 25px;
+  border-top: 1px solid rgba(0,0,0,0.1);
+}
+
+.couple-card:last-child {
+  border-bottom: 1px solid rgba(0,0,0,0.1);
+}
+
+.couple-card-inner {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.couple-photo {
+  width: 120px;
+  height: 160px;
+  flex-shrink: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.couple-photo-groom {
+  background: linear-gradient(145deg, #3a3a3a, #1a1a1a, #2d2d2d);
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 92% 100%, 0 100%);
+}
+
+.couple-photo-bride {
+  background: linear-gradient(145deg, #d4a574, #c4956a, #b8876a);
+  clip-path: polygon(8% 0, 100% 0, 100% 100%, 0 100%, 0 15%);
+}
+
+.couple-photo::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 3px,
+    rgba(0,0,0,0.05) 3px,
+    rgba(0,0,0,0.05) 4px
+  );
+}
+
+.couple-info {
+  flex: 1;
+  padding-top: 10px;
+}
+
+.couple-role {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.couple-name-en {
+  font-family: 'Oswald', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  line-height: 1;
+  color: var(--black);
+}
+
+.couple-name-kr {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--black);
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.couple-parents {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--gray);
+  line-height: 1.8;
+}
+
+.couple-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px 0;
+  position: relative;
+}
+
+.couple-divider-ampersand {
+  font-family: 'Anton', sans-serif;
+  font-size: 60px;
+  color: var(--accent);
+  line-height: 1;
+  position: relative;
+  z-index: 2;
+}
+
+.couple-divider-line {
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+}
+
+/* === DATE / CALENDAR SECTION === */
+.section-date {
+  position: relative;
+  background: var(--black);
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.date-giant {
+  text-align: center;
+  padding: 0 15px;
+  position: relative;
+}
+
+.date-giant-number {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(120px, 40vw, 200px);
+  line-height: 0.85;
+  letter-spacing: -8px;
+  color: transparent;
+  -webkit-text-stroke: 2px var(--white);
+  position: relative;
+}
+
+.date-giant-number .filled {
+  color: var(--white);
+  -webkit-text-stroke: 0;
+}
+
+.date-slash {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(80px, 25vw, 120px);
+  color: var(--accent);
+  line-height: 0.85;
+  display: inline-block;
+  margin: 0 -5px;
+}
+
+.date-meta {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 30px;
+}
+
+.date-meta-item {
+  text-align: center;
+}
+
+.date-meta-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.date-meta-value {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 24px;
+  letter-spacing: 2px;
+  color: var(--white);
+}
+
+.date-korean {
+  text-align: center;
+  margin-top: 40px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.6);
+  letter-spacing: 3px;
+}
+
+/* Calendar grid */
+.calendar-wrap {
+  max-width: 340px;
+  margin: 50px auto 0;
+  padding: 0 20px;
+}
+
+.calendar-month-title {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  text-align: center;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 20px;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
+  text-align: center;
+}
+
+.calendar-grid .day-header {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: rgba(255,255,255,0.3);
+  padding: 8px 0;
+  text-transform: uppercase;
+}
+
+.calendar-grid .day-header:first-child { color: var(--accent); }
+.calendar-grid .day-header:last-child { color: #4a90d9; }
+
+.calendar-grid .day {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  padding: 10px 0;
+  position: relative;
+}
+
+.calendar-grid .day.today {
+  color: var(--black);
+  font-weight: 600;
+}
+
+.calendar-grid .day.today::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 34px;
+  height: 34px;
+  background: var(--accent);
+  border-radius: 0;
+  z-index: -1;
+}
+
+.calendar-grid .day.sunday { color: rgba(230, 57, 70, 0.6); }
+.calendar-grid .day.saturday { color: rgba(74, 144, 217, 0.5); }
+.calendar-grid .day.empty { visibility: hidden; }
+
+/* === GALLERY COLLAGE === */
+.section-gallery {
+  position: relative;
+  background: var(--dark-gray);
+  padding: 80px 0 40px;
+  overflow: hidden;
+}
+
+.gallery-header {
+  padding: 0 25px;
+  margin-bottom: 50px;
+}
+
+.gallery-header h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(44px, 14vw, 64px);
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  line-height: 0.9;
+}
+
+.gallery-header h2 .outline {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--white);
+}
+
+.gallery-exclusive {
+  position: absolute;
+  top: 90px;
+  right: 20px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 3px;
+  color: var(--accent-yellow);
+  transform: rotate(-5deg);
+  border: 1px solid var(--accent-yellow);
+  padding: 4px 12px;
+}
+
+/* Collage grid */
+.gallery-collage {
+  position: relative;
+  padding: 0 15px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 8px;
+}
+
+.gallery-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.gallery-item .photo-placeholder {
+  width: 100%;
+  height: 100%;
+  min-height: 150px;
+  position: relative;
+}
+
+.gallery-item .photo-placeholder::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(255,255,255,0.02) 4px,
+    rgba(255,255,255,0.02) 5px
+  );
+}
+
+.gi-1 { grid-column: 1 / 3; }
+.gi-1 .photo-placeholder {
+  height: 280px;
+  background: linear-gradient(170deg, #2c1810, #4a2f20, #6b4332);
+  clip-path: polygon(0 0, 100% 0, 100% 92%, 95% 100%, 0 100%);
+}
+
+.gi-2 .photo-placeholder {
+  height: 220px;
+  background: linear-gradient(150deg, #555, #333, #222);
+  filter: grayscale(100%);
+  clip-path: polygon(5% 0, 100% 0, 100% 100%, 0 100%, 0 8%);
+}
+
+.gi-3 .photo-placeholder {
+  height: 220px;
+  background: linear-gradient(160deg, #d4a574, #b8876a, #8c6550);
+  transform: rotate(-1deg);
+}
+
+.gi-4 {
+  grid-column: 1 / 3;
+  transform: rotate(0.5deg);
+}
+.gi-4 .photo-placeholder {
+  height: 200px;
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  clip-path: polygon(0 5%, 3% 0, 100% 0, 100% 100%, 97% 95%, 0 100%);
+}
+
+.gi-5 .photo-placeholder {
+  height: 180px;
+  background: linear-gradient(145deg, #3a3a3a, #1a1a1a);
+  filter: grayscale(100%) contrast(1.2);
+}
+
+.gi-6 .photo-placeholder {
+  height: 180px;
+  background: linear-gradient(160deg, #c4956a, #a07855, #7a5c42);
+  clip-path: polygon(0 0, 100% 0, 95% 100%, 5% 95%);
+}
+
+.gallery-item-label {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.4);
+  text-transform: uppercase;
+  background: rgba(0,0,0,0.6);
+  padding: 3px 8px;
+}
+
+/* === FILM STRIP (Horizontal Scroll) === */
+.film-strip-section {
+  background: var(--black);
+  padding: 40px 0;
+  overflow: hidden;
+}
+
+.film-strip-label {
+  padding: 0 25px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  margin-bottom: 20px;
+}
+
+.film-strip-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding: 0 0 20px;
+}
+
+.film-strip-container::-webkit-scrollbar { display: none; }
+
+.film-strip {
+  display: flex;
+  gap: 3px;
+  padding: 0 15px;
+  width: max-content;
+}
+
+.film-strip::before,
+.film-strip::after {
+  content: '';
+  display: block;
+  width: 15px;
+  flex-shrink: 0;
+}
+
+.film-frame {
+  position: relative;
+  width: 140px;
+  height: 100px;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,0.15);
+  padding: 3px;
+}
+
+.film-frame-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.film-frame:nth-child(odd) .film-frame-inner {
+  background: linear-gradient(145deg, #2c1810, #4a2f20);
+}
+
+.film-frame:nth-child(even) .film-frame-inner {
+  background: linear-gradient(145deg, #555, #333);
+  filter: grayscale(100%);
+}
+
+.film-frame-number {
+  position: absolute;
+  bottom: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Space Mono', monospace;
+  font-size: 7px;
+  color: rgba(255,255,255,0.2);
+  letter-spacing: 1px;
+}
+
+/* Film strip border decorations */
+.film-strip-border {
+  height: 12px;
+  margin: 0 15px;
+  display: flex;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.film-perf {
+  width: 8px;
+  height: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+/* === VENUE / MAP SECTION === */
+.section-venue {
+  position: relative;
+  background: var(--white);
+  color: var(--black);
+  padding: 80px 0;
+  overflow: hidden;
+}
+
+.venue-header {
+  padding: 0 25px;
+  margin-bottom: 40px;
+}
+
+.venue-header h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(40px, 13vw, 56px);
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  line-height: 0.9;
+  color: var(--black);
+}
+
+.venue-header h2 .outline-dark {
+  color: transparent;
+  -webkit-text-stroke: 1.5px var(--black);
+}
+
+.venue-map-placeholder {
+  margin: 0 25px;
+  height: 220px;
+  background: linear-gradient(135deg, #e8e4df, #d4d0cb, #c8c4bf);
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0,0,0,0.08);
+}
+
+.venue-map-placeholder::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: 
+    repeating-linear-gradient(0deg, transparent, transparent 20px, rgba(0,0,0,0.03) 20px, rgba(0,0,0,0.03) 21px),
+    repeating-linear-gradient(90deg, transparent, transparent 20px, rgba(0,0,0,0.03) 20px, rgba(0,0,0,0.03) 21px);
+}
+
+.venue-map-placeholder::after {
+  content: 'MAP';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Oswald', sans-serif;
+  font-size: 40px;
+  font-weight: 300;
+  letter-spacing: 20px;
+  color: rgba(0,0,0,0.08);
+}
+
+.venue-map-pin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: var(--accent);
+  border-radius: 50% 50% 50% 0;
+  transform: translate(-50%, -50%) rotate(-45deg);
+  z-index: 2;
+}
+
+.venue-map-pin::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: var(--white);
+  border-radius: 50%;
+}
+
+.venue-details {
+  padding: 30px 25px 0;
+}
+
+.venue-name {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 4px;
+}
+
+.venue-name-en {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gray);
+  margin-bottom: 15px;
+}
+
+.venue-address {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: #555;
+  line-height: 1.8;
+}
+
+.venue-transport {
+  padding: 30px 25px 0;
+}
+
+.venue-transport-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  margin-bottom: 15px;
+}
+
+.venue-transport-item {
+  display: flex;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: #555;
+  line-height: 1.6;
+}
+
+.venue-transport-item strong {
+  font-weight: 500;
+  color: var(--black);
+  white-space: nowrap;
+  font-size: 11px;
+}
+
+/* === INVITATION TEXT === */
+.section-invitation {
+  position: relative;
+  background: var(--black);
+  padding: 100px 25px;
+  overflow: hidden;
+}
+
+.invitation-bg-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-8deg);
+  font-family: 'Anton', sans-serif;
+  font-size: 160px;
+  color: rgba(255,255,255,0.02);
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.invitation-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+.invitation-deco {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--accent);
+  margin-bottom: 30px;
+}
+
+.invitation-text {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  line-height: 2.2;
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 1px;
+}
+
+.invitation-text strong {
+  font-weight: 500;
+  color: var(--white);
+}
+
+.invitation-parents {
+  margin-top: 50px;
+  padding-top: 30px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.invitation-parents-row {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  line-height: 2;
+}
+
+.invitation-parents-role {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  font-family: 'Space Mono', monospace;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+/* === ACCOUNT / GIFT SECTION === */
+.section-account {
+  background: var(--off-white);
+  color: var(--black);
+  padding: 80px 0;
+  position: relative;
+}
+
+.account-header {
+  padding: 0 25px;
+  margin-bottom: 40px;
+}
+
+.account-header h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(36px, 12vw, 50px);
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  line-height: 0.9;
+  color: var(--black);
+}
+
+.account-groups {
+  padding: 0 25px;
+}
+
+.account-group {
+  margin-bottom: 30px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: var(--white);
+}
+
+.account-group-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 4px;
+  color: var(--white);
+  background: var(--black);
+  padding: 12px 20px;
+  text-transform: uppercase;
+}
+
+.account-item {
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.account-item:last-child { border-bottom: none; }
+
+.account-info .account-bank {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--gray);
+  margin-bottom: 3px;
+}
+
+.account-info .account-number {
+  font-family: 'Space Mono', monospace;
+  font-size: 13px;
+  color: var(--black);
+  letter-spacing: 1px;
+}
+
+.account-info .account-holder {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 3px;
+}
+
+.account-copy-btn {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  background: none;
+  border: 1px solid var(--black);
+  color: var(--black);
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.account-copy-btn:active {
+  background: var(--black);
+  color: var(--white);
+}
+
+/* === RSVP / GUESTBOOK === */
+.section-rsvp {
+  background: var(--black);
+  padding: 80px 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.rsvp-header {
+  padding: 0 25px;
+  margin-bottom: 50px;
+}
+
+.rsvp-header h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(44px, 14vw, 64px);
+  text-transform: uppercase;
+  letter-spacing: -2px;
+  line-height: 0.9;
+}
+
+.rsvp-header h2 .accent-text { color: var(--accent); }
+
+.rsvp-form {
+  padding: 0 25px;
+}
+
+.rsvp-field {
+  margin-bottom: 20px;
+}
+
+.rsvp-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.rsvp-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  color: var(--white);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 15px;
+  font-weight: 300;
+  padding: 12px 0;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+
+.rsvp-input:focus {
+  border-bottom-color: var(--accent);
+}
+
+.rsvp-input::placeholder {
+  color: rgba(255,255,255,0.2);
+}
+
+.rsvp-textarea {
+  width: 100%;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: var(--white);
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  padding: 15px;
+  outline: none;
+  resize: none;
+  height: 120px;
+  transition: border-color 0.3s ease;
+}
+
+.rsvp-textarea:focus {
+  border-color: var(--accent);
+}
+
+.rsvp-textarea::placeholder {
+  color: rgba(255,255,255,0.2);
+}
+
+.rsvp-attendance {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.rsvp-attendance-btn {
+  flex: 1;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 14px;
+  letter-spacing: 3px;
+  padding: 14px;
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+}
+
+.rsvp-attendance-btn.active,
+.rsvp-attendance-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  background: rgba(230, 57, 70, 0.08);
+}
+
+.rsvp-submit {
+  width: 100%;
+  font-family: 'Anton', sans-serif;
+  font-size: 18px;
+  letter-spacing: 4px;
+  padding: 18px;
+  background: var(--accent);
+  border: none;
+  color: var(--white);
+  cursor: pointer;
+  text-transform: uppercase;
+  margin-top: 10px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.rsvp-submit::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.rsvp-submit:active::after {
+  width: 300px;
+  height: 300px;
+}
+
+/* Guestbook Messages */
+.guestbook {
+  padding: 40px 25px 0;
+}
+
+.guestbook-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 20px;
+}
+
+.guestbook-entry {
+  padding: 20px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+
+.guestbook-entry-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.guestbook-entry-text {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.8;
+}
+
+.guestbook-entry-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  color: rgba(255,255,255,0.15);
+  margin-top: 8px;
+  letter-spacing: 1px;
+}
+
+/* === CREDITS SECTION (Magazine Style) === */
+.section-credits {
+  background: var(--white);
+  color: var(--black);
+  padding: 80px 25px;
+  position: relative;
+}
+
+.credits-header {
+  margin-bottom: 40px;
+}
+
+.credits-header h2 {
+  font-family: 'Anton', sans-serif;
+  font-size: 40px;
+  text-transform: uppercase;
+  letter-spacing: -1px;
+}
+
+.credits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.credit-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+}
+
+.credit-role {
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gray);
+}
+
+.credit-name {
+  font-family: 'Oswald', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+/* === FOOTER === */
+.section-footer {
+  background: var(--black);
+  padding: 60px 25px 40px;
+  text-align: center;
+  position: relative;
+}
+
+.footer-logo {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(40px, 14vw, 60px);
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  color: var(--white);
+  line-height: 0.9;
+  margin-bottom: 20px;
+}
+
+.footer-logo .amp {
+  color: var(--accent);
+  font-size: 0.6em;
+}
+
+.footer-date {
+  font-family: 'Space Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 4px;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 30px;
+}
+
+.footer-msg {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 12px;
+  font-weight: 300;
+  color: rgba(255,255,255,0.3);
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+
+.footer-back-top {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--accent);
+  text-decoration: none;
+  border: 1px solid var(--accent);
+  padding: 10px 24px;
+  transition: all 0.3s ease;
+}
+
+.footer-back-top:hover {
+  background: var(--accent);
+  color: var(--white);
+}
+
+.footer-copyright {
+  margin-top: 40px;
+  font-family: 'Space Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.15);
+}
+
+/* === MIX BLEND MODE LAYERS === */
+.blend-overlay {
+  position: absolute;
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+  mix-blend-mode: difference;
+  color: var(--white);
+  pointer-events: none;
+  user-select: none;
+}
+
+/* === ANIMATIONS === */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-left.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-right.visible {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.stagger-1 { transition-delay: 0.1s; }
+.stagger-2 { transition-delay: 0.2s; }
+.stagger-3 { transition-delay: 0.3s; }
+.stagger-4 { transition-delay: 0.4s; }
+.stagger-5 { transition-delay: 0.5s; }
+
+/* === HORIZONTAL RULE EDITORIAL === */
+.editorial-hr {
+  border: none;
+  height: 1px;
+  background: rgba(255,255,255,0.08);
+  margin: 0 25px;
+}
+
+.editorial-hr-dark {
+  background: rgba(0,0,0,0.08);
+}
+
+/* === PAGE NUMBER MARKER === */
+.page-marker {
+  position: absolute;
+  bottom: 20px;
+  right: 25px;
+  font-family: 'Space Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.15);
+}
+
+.page-marker-dark {
+  color: rgba(0,0,0,0.15);
+}
+
+/* Responsive adjustments for desktop phone-frame */
+@media (min-width: 431px) {
+  body {
+    box-shadow: 0 0 80px rgba(0,0,0,0.5);
+    border-left: 1px solid rgba(255,255,255,0.05);
+    border-right: 1px solid rgba(255,255,255,0.05);
+  }
+}
+
+/* === SECTION DIVIDER (Bold line with text) === */
+.section-divider {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 0 25px;
+  margin: 30px 0;
+}
+
+.section-divider-line {
+  flex: 1;
+  height: 2px;
+  background: var(--accent);
+}
+
+.section-divider-text {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+/* === BOLD QUOTE BLOCK === */
+.quote-block {
+  position: relative;
+  padding: 60px 25px;
+  background: var(--accent);
+  color: var(--white);
+  text-align: center;
+}
+
+.quote-block-text {
+  font-family: 'Anton', sans-serif;
+  font-size: clamp(28px, 9vw, 38px);
+  text-transform: uppercase;
+  letter-spacing: -1px;
+  line-height: 1.1;
+  position: relative;
+  z-index: 2;
+}
+
+.quote-block-sub {
+  font-family: 'Noto Sans KR', sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  margin-top: 15px;
+  opacity: 0.7;
+  letter-spacing: 2px;
+}
+
+.quote-block-bg {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Anton', sans-serif;
+  font-size: 200px;
+  color: rgba(0,0,0,0.1);
+  pointer-events: none;
+}
+
+/* === CONTACT STRIP === */
+.contact-strip {
+  display: flex;
+  background: var(--black);
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.contact-strip-item {
+  flex: 1;
+  text-align: center;
+  padding: 20px 10px;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  text-decoration: none;
+  color: var(--white);
+  transition: background 0.3s ease;
+}
+
+.contact-strip-item:last-child { border-right: none; }
+
+.contact-strip-item:active {
+  background: rgba(255,255,255,0.05);
+}
+
+.contact-strip-icon {
+  font-size: 18px;
+  margin-bottom: 6px;
+}
+
+.contact-strip-label {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(255,255,255,0.4);
+}
+
+/* Blend mode text elements */
+.blend-text-huge {
+  font-family: 'Anton', sans-serif;
+  font-size: 100px;
+  text-transform: uppercase;
+  line-height: 0.85;
+  mix-blend-mode: difference;
+  color: var(--white);
+  opacity: 0.15;
+  position: absolute;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* Barcode decoration */
+.barcode {
+  display: flex;
+  gap: 1px;
+  justify-content: center;
+  padding: 15px 0;
+}
+
+.barcode-line {
+  width: 2px;
+  height: 30px;
+  background: rgba(255,255,255,0.15);
+}
+
+.barcode-line:nth-child(odd) {
+  width: 1px;
+}
+
+.barcode-line:nth-child(3n) {
+  height: 25px;
+  width: 3px;
+}
+</style>
+</head>
+<body>
+
+<!-- ===== MARQUEE TICKER ===== -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span>Doyun & Seoyeon — 2026.09.12 — Grand Hyatt Seoul — The Wedding Issue</span>
+    <span>Doyun & Seoyeon — 2026.09.12 — Grand Hyatt Seoul — The Wedding Issue</span>
+    <span>Doyun & Seoyeon — 2026.09.12 — Grand Hyatt Seoul — The Wedding Issue</span>
+    <span>Doyun & Seoyeon — 2026.09.12 — Grand Hyatt Seoul — The Wedding Issue</span>
+  </div>
+</div>
+
+<!-- ===== SIDE LABELS ===== -->
+<div class="side-label side-label-left">Vol. 01 — 2026 Autumn Issue</div>
+<div class="side-label side-label-right">Doyun × Seoyeon — Seoul, Korea</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="top">
+  <div class="hero-bg"></div>
+  <div class="hero-photo-abstract"></div>
+  
+  <div class="hero-tag">★ EXCLUSIVE</div>
+  <div class="hero-issue-badge">No. 01 / Autumn 2026</div>
+  
+  <div class="hero-vertical-text">The Wedding Issue — Vol. 01 — 2026</div>
+  
+  <div class="hero-wedding-text" aria-label="WEDDING">
+    <span class="letter" style="animation-delay: 0.1s">W</span><span class="letter" style="animation-delay: 0.2s">E</span><span class="letter" style="animation-delay: 0.3s">D</span><span class="letter" style="animation-delay: 0.4s">D</span><span class="letter" style="animation-delay: 0.5s">I</span><span class="letter" style="animation-delay: 0.6s">N</span><span class="letter" style="animation-delay: 0.7s">G</span>
+  </div>
+  
+  <div class="hero-subtitle">Doyun  ×  Seoyeon</div>
+  
+  <div class="hero-date-line">2026. 09. 12 SAT — GRAND HYATT SEOUL</div>
+  
+  <div class="hero-scroll-indicator">
+    <span>Scroll</span>
+    <div class="scroll-line"></div>
+  </div>
+  
+  <div class="page-marker">P. 01</div>
+</section>
+
+<!-- ===== BOLD QUOTE DIVIDER ===== -->
+<div class="quote-block reveal">
+  <div class="quote-block-bg">&</div>
+  <div class="quote-block-text">
+    "THE BEGINNING<br>OF FOREVER"
+  </div>
+  <div class="quote-block-sub">영원의 시작</div>
+</div>
+
+<!-- ===== COUPLE SECTION ===== -->
+<section class="section-couple">
+  <div class="couple-rotated-text">LOVE STORY</div>
+  
+  <div class="couple-header reveal">
+    <div class="section-number">No. 02</div>
+    <div class="editorial-tag">First Look — Couple Feature</div>
+    <h2>THE<br><span class="accent">COUPLE</span></h2>
+  </div>
+  
+  <div class="couple-cards">
+    <div class="couple-card reveal stagger-1">
+      <div class="couple-card-inner">
+        <div class="couple-photo couple-photo-groom"></div>
+        <div class="couple-info">
+          <div class="couple-role">Groom</div>
+          <div class="couple-name-en">Kim Doyun</div>
+          <div class="couple-name-kr">김도윤</div>
+          <div class="couple-parents">
+            김영수 · 박미정의 아들
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="couple-divider">
+      <div class="couple-divider-line"></div>
+      <div class="couple-divider-ampersand reveal">&</div>
+    </div>
+    
+    <div class="couple-card reveal stagger-2">
+      <div class="couple-card-inner">
+        <div class="couple-photo couple-photo-bride"></div>
+        <div class="couple-info">
+          <div class="couple-role">Bride</div>
+          <div class="couple-name-en">Lee Seoyeon</div>
+          <div class="couple-name-kr">이서연</div>
+          <div class="couple-parents">
+            이진호 · 최수연의 딸
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="page-marker page-marker-dark">P. 02</div>
+</section>
+
+<!-- ===== INVITATION TEXT ===== -->
+<section class="section-invitation">
+  <div class="invitation-bg-text">INVITE</div>
+  
+  <div class="invitation-content reveal">
+    <div class="invitation-deco">—— Invitation ——</div>
+    <p class="invitation-text">
+      서로 다른 길을 걸어온<br>
+      두 사람이 만나<br>
+      <strong>이제 같은 길을 걷고자 합니다</strong><br><br>
+      함께해 온 시간만큼<br>
+      서로를 아끼고 사랑하며<br>
+      <strong>평생을 함께 하겠습니다</strong><br><br>
+      귀한 걸음 하시어<br>
+      축복해 주시면<br>
+      더없는 기쁨이 되겠습니다
+    </p>
+    
+    <div class="invitation-parents">
+      <div class="invitation-parents-role">Parents</div>
+      <div class="invitation-parents-row">
+        <span>김영수 · 박미정</span>
+        <span style="color: rgba(255,255,255,0.2)">의 아들</span>
+        <span style="color: var(--accent)">도윤</span>
+      </div>
+      <div class="invitation-parents-row">
+        <span>이진호 · 최수연</span>
+        <span style="color: rgba(255,255,255,0.2)">의 딸</span>
+        <span style="color: var(--accent)">서연</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="page-marker">P. 03</div>
+</section>
+
+<!-- ===== DATE / CALENDAR ===== -->
+<section class="section-date">
+  <div class="section-divider">
+    <div class="section-divider-line"></div>
+    <div class="section-divider-text">The Date</div>
+    <div class="section-divider-line"></div>
+  </div>
+  
+  <div class="date-giant reveal">
+    <div class="date-giant-number">
+      <span class="filled">09</span><span class="date-slash">/</span><span class="filled">12</span>
+    </div>
+  </div>
+  
+  <div class="date-meta reveal stagger-1">
+    <div class="date-meta-item">
+      <div class="date-meta-label">Year</div>
+      <div class="date-meta-value">2026</div>
+    </div>
+    <div class="date-meta-item">
+      <div class="date-meta-label">Day</div>
+      <div class="date-meta-value">SAT</div>
+    </div>
+    <div class="date-meta-item">
+      <div class="date-meta-label">Time</div>
+      <div class="date-meta-value">PM 2:00</div>
+    </div>
+  </div>
+  
+  <div class="date-korean reveal stagger-2">
+    2026년 9월 12일 토요일 오후 2시
+  </div>
+  
+  <!-- Calendar Grid -->
+  <div class="calendar-wrap reveal stagger-3">
+    <div class="calendar-month-title">September 2026</div>
+    <div class="calendar-grid">
+      <div class="day-header">S</div>
+      <div class="day-header">M</div>
+      <div class="day-header">T</div>
+      <div class="day-header">W</div>
+      <div class="day-header">T</div>
+      <div class="day-header">F</div>
+      <div class="day-header">S</div>
+      
+      <!--  Sept 2026: starts on Tuesday -->
+      <div class="day empty"></div>
+      <div class="day empty"></div>
+      <div class="day">1</div>
+      <div class="day">2</div>
+      <div class="day">3</div>
+      <div class="day">4</div>
+      <div class="day saturday">5</div>
+      
+      <div class="day sunday">6</div>
+      <div class="day">7</div>
+      <div class="day">8</div>
+      <div class="day">9</div>
+      <div class="day">10</div>
+      <div class="day">11</div>
+      <div class="day today saturday">12</div>
+      
+      <div class="day sunday">13</div>
+      <div class="day">14</div>
+      <div class="day">15</div>
+      <div class="day">16</div>
+      <div class="day">17</div>
+      <div class="day">18</div>
+      <div class="day saturday">19</div>
+      
+      <div class="day sunday">20</div>
+      <div class="day">21</div>
+      <div class="day">22</div>
+      <div class="day">23</div>
+      <div class="day">24</div>
+      <div class="day">25</div>
+      <div class="day saturday">26</div>
+      
+      <div class="day sunday">27</div>
+      <div class="day">28</div>
+      <div class="day">29</div>
+      <div class="day">30</div>
+      <div class="day empty"></div>
+      <div class="day empty"></div>
+      <div class="day empty"></div>
+    </div>
+  </div>
+  
+  <div class="page-marker">P. 04</div>
+</section>
+
+<!-- ===== GALLERY COLLAGE ===== -->
+<section class="section-gallery">
+  <div class="gallery-header reveal">
+    <div class="section-number">No. 05</div>
+    <div class="editorial-tag" style="margin: 8px 0 15px;">Editorial — Gallery</div>
+    <h2>THE<br><span class="outline">GALLERY</span></h2>
+  </div>
+  
+  <div class="gallery-exclusive">★ FIRST LOOK</div>
+  
+  <div class="gallery-collage">
+    <div class="gallery-item gi-1 reveal">
+      <div class="photo-placeholder"></div>
+      <div class="gallery-item-label">Cover — 01</div>
+    </div>
+    <div class="gallery-item gi-2 reveal stagger-1">
+      <div class="photo-placeholder"></div>
+      <div class="gallery-item-label">B&W — 02</div>
+    </div>
+    <div class="gallery-item gi-3 reveal stagger-2">
+      <div class="photo-placeholder"></div>
+      <div class="gallery-item-label">Portrait — 03</div>
+    </div>
+    <div class="gallery-item gi-4 reveal stagger-3">
+      <div class="photo-placeholder"></div>
+      <div class="gallery-item-label">Film — 04</div>
+    </div>
+    <div class="gallery-item gi-5 reveal stagger-1">
+      <div class="photo-placeholder"></div>
+      <div class="gallery-item-label">B&W — 05</div>
+    </div>
+    <div class="gallery-item gi-6 reveal stagger-2">
+      <div class="photo-placeholder"></div>
+      <div class="gallery-item-label">Color — 06</div>
+    </div>
+  </div>
+  
+  <div class="page-marker">P. 05</div>
+</section>
+
+<!-- ===== FILM STRIP ===== -->
+<section class="film-strip-section">
+  <div class="film-strip-label">Contact Sheet — 35mm Film</div>
+  
+  <div class="film-strip-border">
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+  </div>
+  
+  <div class="film-strip-container">
+    <div class="film-strip">
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">DY-001</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">DY-002</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">SY-003</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">DY-004</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">SY-005</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">DY-006</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">SY-007</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">DY-008</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">SY-009</div>
+      </div>
+      <div class="film-frame">
+        <div class="film-frame-inner"></div>
+        <div class="film-frame-number">DY-010</div>
+      </div>
+    </div>
+  </div>
+  
+  <div class="film-strip-border">
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+    <div class="film-perf"></div><div class="film-perf"></div><div class="film-perf"></div>
+  </div>
+  
+  <div style="text-align: center; padding: 15px 0 0;">
+    <div class="barcode">
+      <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+      <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+      <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+      <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+      <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+      <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+      <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+      <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+    </div>
+    <div style="font-family: 'Space Mono', monospace; font-size: 8px; color: rgba(255,255,255,0.15); letter-spacing: 2px;">
+      KODAK PORTRA 400 — 2026.09.12
+    </div>
+  </div>
+</section>
+
+<!-- ===== VENUE ===== -->
+<section class="section-venue">
+  <div class="venue-header reveal">
+    <div class="section-number" style="color: rgba(0,0,0,0.2);">No. 06</div>
+    <div class="editorial-tag" style="margin: 8px 0 15px;">Location — Venue</div>
+    <h2>THE<br><span class="outline-dark">VENUE</span></h2>
+  </div>
+  
+  <div class="venue-map-placeholder reveal stagger-1">
+    <div class="venue-map-pin"></div>
+  </div>
+  
+  <div class="venue-details reveal stagger-2">
+    <div class="venue-name">그랜드 하얏트 서울</div>
+    <div class="venue-name-en">Grand Hyatt Seoul — Grand Ballroom</div>
+    <div class="venue-address">
+      서울특별시 용산구 소월로 322<br>
+      그랜드볼룸 2층
+    </div>
+  </div>
+  
+  <div class="venue-transport reveal stagger-3">
+    <div class="venue-transport-title">Transportation</div>
+    <div class="venue-transport-item">
+      <strong>지하철</strong>
+      <span>6호선 녹사평역 1번 출구 도보 15분<br>1호선 남영역 셔틀버스 운행</span>
+    </div>
+    <div class="venue-transport-item">
+      <strong>버스</strong>
+      <span>그랜드 하얏트 호텔 정류장 하차<br>402, 405번 이용</span>
+    </div>
+    <div class="venue-transport-item">
+      <strong>주차</strong>
+      <span>호텔 지하주차장 이용 (3시간 무료)<br>발렛파킹 가능</span>
+    </div>
+  </div>
+
+  <!-- Contact strip with call buttons -->
+  <div style="display: flex; gap: 10px; padding: 30px 25px 0;">
+    <a href="tel:" style="flex:1; text-align:center; padding: 14px; border: 1px solid var(--black); text-decoration: none; font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 3px; color: var(--black); transition: all 0.3s ease;">
+      ☎ 신랑에게 연락
+    </a>
+    <a href="tel:" style="flex:1; text-align:center; padding: 14px; border: 1px solid var(--black); text-decoration: none; font-family: 'Bebas Neue', sans-serif; font-size: 12px; letter-spacing: 3px; color: var(--black); transition: all 0.3s ease;">
+      ☎ 신부에게 연락
+    </a>
+  </div>
+  
+  <div class="page-marker page-marker-dark">P. 06</div>
+</section>
+
+<!-- ===== ACCOUNT ===== -->
+<section class="section-account">
+  <div class="account-header reveal">
+    <div class="section-number" style="color: rgba(0,0,0,0.2);">No. 07</div>
+    <div class="editorial-tag" style="margin: 8px 0 15px;">Gift — Celebration</div>
+    <h2>마음 전하실 곳</h2>
+  </div>
+  
+  <div class="account-groups">
+    <div class="account-group reveal stagger-1">
+      <div class="account-group-title">Groom — 신랑측</div>
+      <div class="account-item">
+        <div class="account-info">
+          <div class="account-bank">국민은행</div>
+          <div class="account-number">000-0000-0000-00</div>
+          <div class="account-holder">김도윤</div>
+        </div>
+        <button class="account-copy-btn" onclick="copyAccount(this, '000-0000-0000-00')">Copy</button>
+      </div>
+      <div class="account-item">
+        <div class="account-info">
+          <div class="account-bank">신한은행</div>
+          <div class="account-number">000-000-000000</div>
+          <div class="account-holder">김영수 (부)</div>
+        </div>
+        <button class="account-copy-btn" onclick="copyAccount(this, '000-000-000000')">Copy</button>
+      </div>
+      <div class="account-item">
+        <div class="account-info">
+          <div class="account-bank">우리은행</div>
+          <div class="account-number">0000-000-000000</div>
+          <div class="account-holder">박미정 (모)</div>
+        </div>
+        <button class="account-copy-btn" onclick="copyAccount(this, '0000-000-000000')">Copy</button>
+      </div>
+    </div>
+    
+    <div class="account-group reveal stagger-2">
+      <div class="account-group-title">Bride — 신부측</div>
+      <div class="account-item">
+        <div class="account-info">
+          <div class="account-bank">하나은행</div>
+          <div class="account-number">000-000000-00000</div>
+          <div class="account-holder">이서연</div>
+        </div>
+        <button class="account-copy-btn" onclick="copyAccount(this, '000-000000-00000')">Copy</button>
+      </div>
+      <div class="account-item">
+        <div class="account-info">
+          <div class="account-bank">기업은행</div>
+          <div class="account-number">000-000000-00-000</div>
+          <div class="account-holder">이진호 (부)</div>
+        </div>
+        <button class="account-copy-btn" onclick="copyAccount(this, '000-000000-00-000')">Copy</button>
+      </div>
+      <div class="account-item">
+        <div class="account-info">
+          <div class="account-bank">농협은행</div>
+          <div class="account-number">000-0000-0000-00</div>
+          <div class="account-holder">최수연 (모)</div>
+        </div>
+        <button class="account-copy-btn" onclick="copyAccount(this, '000-0000-0000-00')">Copy</button>
+      </div>
+    </div>
+  </div>
+  
+  <div class="page-marker page-marker-dark">P. 07</div>
+</section>
+
+<!-- ===== RSVP / GUESTBOOK ===== -->
+<section class="section-rsvp">
+  <div class="rsvp-header reveal">
+    <div class="section-number">No. 08</div>
+    <div class="editorial-tag" style="margin: 8px 0 15px;">Message — RSVP</div>
+    <h2><span class="accent-text">GUEST</span><br>BOOK</h2>
+  </div>
+  
+  <div class="rsvp-form reveal stagger-1">
+    <div class="rsvp-field">
+      <label class="rsvp-label">Name</label>
+      <input class="rsvp-input" type="text" placeholder="성함을 입력해주세요">
+    </div>
+    
+    <div class="rsvp-field">
+      <label class="rsvp-label">Attendance</label>
+      <div class="rsvp-attendance">
+        <button class="rsvp-attendance-btn active" onclick="selectAttendance(this)">참석합니다</button>
+        <button class="rsvp-attendance-btn" onclick="selectAttendance(this)">불참합니다</button>
+      </div>
+    </div>
+    
+    <div class="rsvp-field">
+      <label class="rsvp-label">Message</label>
+      <textarea class="rsvp-textarea" placeholder="축하 메시지를 남겨주세요"></textarea>
+    </div>
+    
+    <button class="rsvp-submit">SEND MESSAGE</button>
+  </div>
+  
+  <!-- Sample Guestbook Entries -->
+  <div class="guestbook reveal stagger-2">
+    <div class="guestbook-title">Recent Messages</div>
+    
+    <div class="guestbook-entry">
+      <div class="guestbook-entry-name">Park Jihyun</div>
+      <div class="guestbook-entry-text">두 분의 아름다운 결합을 진심으로 축하합니다! 행복한 가정 이루시길 바랍니다 ♥</div>
+      <div class="guestbook-entry-time">2026.08.15 — 14:23</div>
+    </div>
+    
+    <div class="guestbook-entry">
+      <div class="guestbook-entry-name">Choi Minsoo</div>
+      <div class="guestbook-entry-text">도윤아, 서연님과 함께 행복한 날들만 가득하길! 결혼 진심으로 축하해 🎉</div>
+      <div class="guestbook-entry-time">2026.08.14 — 09:45</div>
+    </div>
+    
+    <div class="guestbook-entry">
+      <div class="guestbook-entry-name">Kim Yuna</div>
+      <div class="guestbook-entry-text">서연언니! 결혼 너무너무 축하해요~ 예쁜 모습 기대할게요 💐</div>
+      <div class="guestbook-entry-time">2026.08.13 — 22:10</div>
+    </div>
+  </div>
+  
+  <div class="page-marker">P. 08</div>
+</section>
+
+<!-- ===== CREDITS (Magazine Style) ===== -->
+<section class="section-credits">
+  <div class="credits-header reveal">
+    <div class="section-number" style="color: rgba(0,0,0,0.2);">No. 09</div>
+    <div class="editorial-tag" style="margin: 8px 0 15px;">Credits & Contributors</div>
+    <h2>CREDITS</h2>
+  </div>
+  
+  <div class="credits-list reveal stagger-1">
+    <div class="credit-item">
+      <div class="credit-role">Creative Direction</div>
+      <div class="credit-name">Kim Doyun & Lee Seoyeon</div>
+    </div>
+    <div class="credit-item">
+      <div class="credit-role">Photography</div>
+      <div class="credit-name">Studio Luminance</div>
+    </div>
+    <div class="credit-item">
+      <div class="credit-role">Venue</div>
+      <div class="credit-name">Grand Hyatt Seoul</div>
+    </div>
+    <div class="credit-item">
+      <div class="credit-role">Styling</div>
+      <div class="credit-name">Maison de Fleur</div>
+    </div>
+    <div class="credit-item">
+      <div class="credit-role">Hair & Makeup</div>
+      <div class="credit-name">Atelier Beauté</div>
+    </div>
+    <div class="credit-item">
+      <div class="credit-role">Floral Design</div>
+      <div class="credit-name">Bloom & Wild</div>
+    </div>
+    <div class="credit-item">
+      <div class="credit-role">Music</div>
+      <div class="credit-name">Ensemble Nocturne</div>
+    </div>
+    <div class="credit-item">
+      <div class="credit-role">Print & Design</div>
+      <div class="credit-name">The Wedding Issue Vol. 01</div>
+    </div>
+  </div>
+  
+  <div class="page-marker page-marker-dark">P. 09</div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<section class="section-footer">
+  <div class="footer-logo reveal">
+    DOYUN <span class="amp">&</span> SEOYEON
+  </div>
+  
+  <div class="footer-date reveal stagger-1">2026 . 09 . 12 — SAT — PM 2:00</div>
+  
+  <div class="footer-msg reveal stagger-2">
+    그랜드 하얏트 서울 그랜드볼룸<br>
+    소중한 분들을 초대합니다
+  </div>
+  
+  <div class="barcode reveal stagger-3">
+    <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+    <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+    <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+    <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+    <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+    <div class="barcode-line"></div><div class="barcode-line"></div><div class="barcode-line"></div>
+  </div>
+  
+  <a href="#top" class="footer-back-top reveal stagger-4">Back to Top ↑</a>
+  
+  <div class="footer-copyright reveal stagger-5">
+    © 2026 The Wedding Issue — All Rights Reserved<br>
+    Doyun × Seoyeon — Vol. 01
+  </div>
+</section>
+
+<script>
+// ===== INTERSECTION OBSERVER FOR REVEAL ANIMATIONS =====
+document.addEventListener('DOMContentLoaded', () => {
+  const observerOptions = {
+    threshold: 0.15,
+    rootMargin: '0px 0px -40px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, observerOptions);
+  
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => {
+    observer.observe(el);
+  });
+  
+  // ===== PARALLAX EFFECTS =====
+  let ticking = false;
+  
+  window.addEventListener('scroll', () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        
+        // Hero parallax
+        const heroBg = document.querySelector('.hero-photo-abstract');
+        if (heroBg) {
+          heroBg.style.transform = `translate(-50%, calc(-50% + ${scrollY * 0.2}px))`;
+        }
+        
+        // Hero text parallax
+        const heroText = document.querySelector('.hero-wedding-text');
+        if (heroText && scrollY < window.innerHeight) {
+          heroText.style.transform = `translateY(${scrollY * 0.15}px)`;
+          heroText.style.opacity = 1 - (scrollY / (window.innerHeight * 0.7));
+        }
+        
+        // Rotated text parallax
+        const rotatedText = document.querySelector('.couple-rotated-text');
+        if (rotatedText) {
+          const rect = rotatedText.closest('section').getBoundingClientRect();
+          if (rect.top < window.innerHeight && rect.bottom > 0) {
+            const progress = (window.innerHeight - rect.top) / (window.innerHeight + rect.height);
+            rotatedText.style.transform = `rotate(-90deg) translateX(${progress * 50}px)`;
+          }
+        }
+        
+        ticking = false;
+      });
+      ticking = true;
+    }
+  });
+  
+  // ===== FILM STRIP AUTO SCROLL HINT =====
+  const filmContainer = document.querySelector('.film-strip-container');
+  if (filmContainer) {
+    // Small auto-scroll hint
+    setTimeout(() => {
+      filmContainer.scrollTo({ left: 80, behavior: 'smooth' });
+      setTimeout(() => {
+        filmContainer.scrollTo({ left: 0, behavior: 'smooth' });
+      }, 600);
+    }, 3000);
+  }
+});
+
+// ===== ATTENDANCE TOGGLE =====
+function selectAttendance(btn) {
+  document.querySelectorAll('.rsvp-attendance-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ===== COPY ACCOUNT NUMBER =====
+function copyAccount(btn, number) {
+  navigator.clipboard.writeText(number).then(() => {
+    const originalText = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.background = 'var(--black)';
+    btn.style.color = 'var(--white)';
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 1500);
+  }).catch(() => {
+    // Fallback
+    const textArea = document.createElement('textarea');
+    textArea.value = number;
+    document.body.appendChild(textArea);
+    textArea.select();
+    document.execCommand('copy');
+    document.body.removeChild(textArea);
+    const originalText = btn.textContent;
+    btn.textContent = 'Copied!';
+    btn.style.background = 'var(--black)';
+    btn.style.color = 'var(--white)';
+    setTimeout(() => {
+      btn.textContent = originalText;
+      btn.style.background = '';
+      btn.style.color = '';
+    }, 1500);
+  });
+}
+
+// ===== COUNTER / COUNTDOWN (subtle D-day) =====
+(function() {
+  const weddingDate = new Date('2026-09-12T14:00:00+09:00');
+  const now = new Date();
+  const diff = weddingDate - now;
+  const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  
+  // Add D-day badge near date section
+  const dateSection = document.querySelector('.section-date');
+  if (dateSection && daysLeft > 0) {
+    const badge = document.createElement('div');
+    badge.style.cssText = `
+      text-align: center;
+      padding: 30px 0 0;
+      font-family: 'Space Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: rgba(255,255,255,0.3);
+    `;
+    badge.innerHTML = `D-${daysLeft}`;
+    dateSection.appendChild(badge);
+  }
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Vol.1 - The Wedding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #F9F8F6;
+            --text-main: #2A2A2A;
+            --text-light: #7A7A7A;
+            --accent: #B89C72;
+            --font-en: 'Cormorant Garamond', serif;
+            --font-ko: 'Noto Serif KR', serif;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font-ko);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* Mobile Container */
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-color);
+            position: relative;
+            box-shadow: 0 0 40px rgba(0,0,0,0.05);
+            min-height: 100vh;
+        }
+
+        /* Noise Texture */
+        .noise::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.04;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+        }
+
+        /* Hero Cover */
+        .cover {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 30px 20px;
+            position: relative;
+        }
+        
+        .issue-info {
+            display: flex;
+            justify-content: space-between;
+            font-family: var(--font-en);
+            text-transform: uppercase;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            border-bottom: 1px solid var(--text-main);
+            padding-bottom: 10px;
+            margin-bottom: 40px;
+        }
+
+        .cover-title {
+            font-family: var(--font-en);
+            font-size: 5rem;
+            line-height: 0.85;
+            font-weight: 300;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cover-title span {
+            display: block;
+        }
+        .cover-title .italic {
+            font-style: italic;
+            margin-left: 40px;
+            color: var(--accent);
+        }
+
+        .cover-img-wrapper {
+            flex: 1;
+            position: relative;
+            margin: 0 -20px;
+            overflow: hidden;
+        }
+
+        .cover-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: top;
+            filter: grayscale(20%) sepia(10%);
+        }
+
+        .cover-bottom {
+            position: absolute;
+            bottom: 30px;
+            left: 20px;
+            right: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            color: #fff;
+            mix-blend-mode: difference;
+        }
+
+        .date-big {
+            font-family: var(--font-en);
+            font-size: 2.5rem;
+            line-height: 1;
+        }
+
+        /* Editorial Section */
+        .section {
+            padding: 80px 30px;
+        }
+
+        .sec-title {
+            font-family: var(--font-en);
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+        }
+        .sec-title::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--text-light);
+            margin-left: 15px;
+            opacity: 0.3;
+        }
+
+        .editorial-text {
+            font-size: 0.95rem;
+            line-height: 2;
+            text-align: justify;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .pull-quote {
+            font-family: var(--font-en);
+            font-size: 2rem;
+            font-style: italic;
+            text-align: center;
+            color: var(--accent);
+            margin: 60px 0;
+            line-height: 1.3;
+        }
+
+        /* Collage Gallery */
+        .collage {
+            position: relative;
+            height: 600px;
+            margin: 40px 0;
+        }
+        .col-img {
+            position: absolute;
+            background-size: cover;
+            background-position: center;
+            box-shadow: 5px 15px 30px rgba(0,0,0,0.1);
+        }
+        .col-1 {
+            width: 70%;
+            height: 350px;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+        .col-2 {
+            width: 55%;
+            height: 280px;
+            bottom: 0;
+            right: 0;
+            z-index: 2;
+            border: 8px solid var(--bg-color);
+        }
+        .col-caption {
+            position: absolute;
+            bottom: -20px;
+            left: 20px;
+            font-family: var(--font-en);
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            color: var(--text-light);
+            transform: rotate(-90deg);
+            transform-origin: left bottom;
+        }
+
+        /* Typography Details */
+        .huge-date {
+            font-family: var(--font-en);
+            text-align: center;
+            margin: 80px 0;
+        }
+        .hd-month { font-size: 1.5rem; letter-spacing: 10px; text-transform: uppercase;}
+        .hd-day { font-size: 8rem; line-height: 0.8; font-weight: 300; margin: 10px 0;}
+        .hd-year { font-size: 1.2rem; color: var(--accent); font-style: italic;}
+
+        /* Minimal Map */
+        .map-box {
+            width: 100%;
+            height: 300px;
+            border: 1px solid var(--text-main);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #EAE6DF;
+        }
+        .map-text {
+            text-align: center;
+        }
+        
+        .info-list {
+            margin-top: 30px;
+            list-style: none;
+        }
+        .info-list li {
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 15px 0;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.85rem;
+        }
+        
+        /* Footer */
+        .footer {
+            background: var(--text-main);
+            color: var(--bg-color);
+            padding: 60px 30px;
+            text-align: center;
+        }
+        .credits {
+            font-family: var(--font-en);
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            line-height: 2;
+            opacity: 0.6;
+            margin-bottom: 40px;
+        }
+
+        /* Animations */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div class="noise"></div>
+    <div class="app-container">
+        
+        <!-- Cover -->
+        <header class="cover">
+            <div class="issue-info fade-up visible">
+                <span>Vol. 01</span>
+                <span>Autumn Collection</span>
+                <span>2026</span>
+            </div>
+            <h1 class="cover-title fade-up visible" style="transition-delay: 0.2s;">
+                <span>Doyun</span>
+                <span class="italic">& Seoyeon</span>
+            </h1>
+            <div class="cover-img-wrapper fade-up visible" style="transition-delay: 0.4s;">
+                <img src="https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop" class="cover-img" alt="Couple">
+                <div class="cover-bottom">
+                    <div>THE WEDDING</div>
+                    <div class="date-big">12.09</div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Intro -->
+        <section class="section">
+            <div class="sec-title fade-up">Prologue</div>
+            <p class="editorial-text fade-up">
+                각자의 궤도를 돌던 두 별이 만나<br>
+                새로운 우주를 빚어내려 합니다.<br><br>
+                서로의 가장 좋은 친구이자 연인으로서,<br>
+                함께 걷는 길 위에 따뜻한 빛을 나누며 살겠습니다.<br>
+                우리의 시작을 축복해 주시면 감사하겠습니다.
+            </p>
+            <div class="fade-up" style="font-size:0.85rem; color:var(--text-light); text-align:right;">
+                김영수 · 박미정의 아들 <strong>도윤</strong><br>
+                이진호 · 최수연의 딸 <strong>서연</strong>
+            </div>
+            
+            <div class="pull-quote fade-up">
+                "Love is composed of a single soul inhabiting two bodies."
+            </div>
+        </section>
+
+        <!-- Editorial Gallery -->
+        <section class="section" style="padding-top:0;">
+            <div class="sec-title fade-up">Lookbook</div>
+            <div class="collage">
+                <div class="col-img col-1 fade-up" style="background-image: url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=800&auto=format&fit=crop');">
+                    <div class="col-caption">FIGURE 1. THE MOMENT</div>
+                </div>
+                <div class="col-img col-2 fade-up" style="background-image: url('https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=800&auto=format&fit=crop'); transition-delay:0.2s;"></div>
+            </div>
+            <p class="editorial-text fade-up" style="text-align:center; font-style:italic;">
+                Seoul, Autumn 2026.
+            </p>
+        </section>
+
+        <!-- Date & Time -->
+        <section class="section">
+            <div class="sec-title fade-up">The Date</div>
+            <div class="huge-date fade-up">
+                <div class="hd-month">September</div>
+                <div class="hd-day">12</div>
+                <div class="hd-year">Saturday, PM 2:00</div>
+            </div>
+        </section>
+
+        <!-- Venue -->
+        <section class="section">
+            <div class="sec-title fade-up">Venue</div>
+            <div class="map-box fade-up">
+                <div class="map-text">
+                    <h3 style="font-family:var(--font-en); font-size:1.5rem; font-weight:400; margin-bottom:10px;">Grand Hyatt Seoul</h3>
+                    <p style="font-size:0.8rem; color:var(--text-light);">그랜드볼룸</p>
+                </div>
+            </div>
+            <ul class="info-list fade-up">
+                <li>
+                    <span style="color:var(--text-light);">주소</span>
+                    <span>서울 용산구 소월로 322</span>
+                </li>
+                <li>
+                    <span style="color:var(--text-light);">지하철</span>
+                    <span>6호선 한강진역 2번 출구</span>
+                </li>
+                <li>
+                    <span style="color:var(--text-light);">주차</span>
+                    <span>호텔 내 주차장 무료 이용</span>
+                </li>
+            </ul>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="credits fade-up">
+                DESIGNED BY STUDIO CHAOS<br>
+                PHOTOGRAPHY BY UNSPLASH<br>
+                STYLING BY EDITORIAL<br>
+                PUBLISHED 2026
+            </div>
+            <h2 style="font-family:var(--font-en); font-size:2.5rem; font-weight:300; font-style:italic;">Thank You</h2>
+        </footer>
+    </div>
+
+    <script>
+        // Simple scroll animation observer
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

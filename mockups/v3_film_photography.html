@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Cinematic Love - Doyun & Seoyeon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Nanum+Myeongjo:wght@400;700&family=Pinyon+Script&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #EFEBE4; /* Warm vintage paper */
+            --text-dark: #2C2B29;
+            --text-light: #6E6A62;
+            --accent: #8A3A33; /* Faded film red */
+            --font-en: 'Playfair Display', serif;
+            --font-ko: 'Nanum Myeongjo', serif;
+            --font-script: 'Pinyon Script', cursive;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #111; /* Desktop background */
+            color: var(--text-dark);
+            font-family: var(--font-ko);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-color);
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+
+        /* Cinematic Grain Overlay */
+        .app-container::after {
+            content: "";
+            position: fixed;
+            top:0; left:0; width:100%; height:100%;
+            pointer-events: none;
+            z-index: 9999;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.05;
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .film-frame {
+            flex: 1;
+            border: 1px solid var(--text-dark);
+            padding: 8px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .film-frame::before, .film-frame::after {
+            content: "KODAK PORTRA 400";
+            position: absolute;
+            font-family: Helvetica, sans-serif;
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: var(--text-dark);
+            transform: rotate(-90deg);
+            transform-origin: left top;
+            left: -10px;
+            top: 50%;
+        }
+
+        .film-photo {
+            flex: 1;
+            background-image: url('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=800&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            filter: sepia(30%) contrast(110%);
+        }
+
+        .hero-text {
+            text-align: center;
+            padding: 30px 0 10px;
+        }
+
+        .script-title {
+            font-family: var(--font-script);
+            font-size: 4.5rem;
+            line-height: 0.7;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        .hero-names {
+            font-family: var(--font-en);
+            font-size: 1.2rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Section Global */
+        .section {
+            padding: 80px 20px;
+            text-align: center;
+        }
+        
+        .sec-title {
+            font-family: var(--font-en);
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 40px;
+            color: var(--text-light);
+        }
+
+        /* Invitation Message */
+        .msg-text {
+            font-size: 0.95rem;
+            line-height: 2.2;
+            color: var(--text-dark);
+            margin-bottom: 50px;
+        }
+
+        .parents-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
+        .parents-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .relation {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        /* Polaroid Gallery */
+        .polaroid-scroll {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            padding: 20px 0;
+            gap: 20px;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        .polaroid-scroll::-webkit-scrollbar { display: none; }
+
+        .polaroid {
+            min-width: 280px;
+            background: #fff;
+            padding: 15px 15px 40px 15px;
+            box-shadow: 2px 10px 20px rgba(0,0,0,0.1);
+            scroll-snap-align: center;
+            transform: rotate(-2deg);
+        }
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            filter: contrast(1.1) sepia(10%);
+        }
+
+        /* Calendar */
+        .cal-wrapper {
+            border-top: 1px solid var(--text-light);
+            border-bottom: 1px solid var(--text-light);
+            padding: 40px 0;
+            margin: 0 20px;
+        }
+        .cal-date {
+            font-family: var(--font-en);
+            font-size: 2.5rem;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+        .grid-cal {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            font-family: var(--font-en);
+            font-size: 0.9rem;
+        }
+        .cal-day.highlight {
+            color: var(--accent);
+            font-weight: bold;
+            position: relative;
+        }
+        .cal-day.highlight::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px; height: 30px;
+            border: 1px solid var(--accent);
+            border-radius: 50%;
+        }
+
+        /* Account & Venue */
+        .info-card {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid rgba(0,0,0,0.1);
+            padding: 25px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .info-card h3 {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid var(--text-dark);
+            padding-bottom: 10px;
+        }
+        
+        .copy-btn {
+            background: transparent;
+            border: 1px solid var(--text-dark);
+            padding: 5px 15px;
+            font-family: var(--font-ko);
+            font-size: 0.7rem;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .map-ph {
+            width: 100%;
+            height: 200px;
+            background: #ddd;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-en);
+            color: var(--text-light);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--text-dark);
+            color: var(--bg-color);
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .footer-script {
+            font-family: var(--font-script);
+            font-size: 3rem;
+            color: var(--accent);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        
+        <!-- Hero -->
+        <section class="hero">
+            <div class="film-frame">
+                <div class="film-photo"></div>
+            </div>
+            <div class="hero-text">
+                <div class="script-title">The Wedding</div>
+                <div class="hero-names">Doyun & Seoyeon</div>
+                <div style="font-family:var(--font-en); font-size:0.8rem; margin-top:15px; letter-spacing:2px;">SEP 12, 2026</div>
+            </div>
+        </section>
+
+        <!-- Greeting -->
+        <section class="section">
+            <div class="sec-title">Invitation</div>
+            <div class="msg-text">
+                오랜 시간 서로의 곁을 지키며<br>
+                사랑을 키워온 저희 두 사람,<br>
+                이제 평생의 동반자로서<br>
+                새로운 인생의 막을 올리려 합니다.<br><br>
+                귀한 걸음 하시어 저희의 앞날을<br>
+                축복해 주시면 더없는 기쁨으로 간직하겠습니다.
+            </div>
+            <div class="parents-info">
+                <div class="parents-row">
+                    <span>김영수 · 박미정</span>
+                    <span class="relation">의 장남</span>
+                    <strong>도윤</strong>
+                </div>
+                <div class="parents-row">
+                    <span>이진호 · 최수연</span>
+                    <span class="relation">의 차녀</span>
+                    <strong>서연</strong>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery -->
+        <section class="section" style="padding: 40px 0;">
+            <div class="sec-title">Moments</div>
+            <div class="polaroid-scroll">
+                <!-- Using real unsplash photos for authentic feel -->
+                <div class="polaroid" style="margin-left: 20px;">
+                    <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=600&auto=format&fit=crop" alt="Gallery">
+                </div>
+                <div class="polaroid">
+                    <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=600&auto=format&fit=crop" alt="Gallery">
+                </div>
+                <div class="polaroid">
+                    <img src="https://images.unsplash.com/photo-1542042161784-26ab9e041e89?q=80&w=600&auto=format&fit=crop" alt="Gallery">
+                </div>
+                <div class="polaroid" style="margin-right: 20px;">
+                    <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=600&auto=format&fit=crop" alt="Gallery">
+                </div>
+            </div>
+            <div style="font-family:var(--font-script); font-size:2rem; margin-top:20px; color:var(--text-light);">Our memories</div>
+        </section>
+
+        <!-- Calendar -->
+        <section class="section">
+            <div class="cal-wrapper">
+                <div class="cal-date">September 2026</div>
+                <div class="grid-cal" style="color:var(--text-light); margin-bottom:15px; border-bottom:1px solid #ccc; padding-bottom:10px;">
+                    <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+                </div>
+                <div class="grid-cal">
+                    <div></div><div></div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div>
+                    <div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div class="cal-day highlight">12</div>
+                    <div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div>
+                    <div>20</div><div>21</div><div>22</div><div>23</div><div>24</div><div>25</div><div>26</div>
+                    <div>27</div><div>28</div><div>29</div><div>30</div><div></div><div></div><div></div>
+                </div>
+                <div style="margin-top: 30px; font-size: 0.9rem;">
+                    2026년 9월 12일 토요일 오후 2시
+                </div>
+            </div>
+        </section>
+
+        <!-- Venue -->
+        <section class="section">
+            <div class="sec-title">Location</div>
+            <div style="font-size: 1.2rem; font-weight: 700; margin-bottom: 5px;">그랜드 하얏트 서울</div>
+            <div style="font-size: 0.85rem; color: var(--text-light);">서울 용산구 소월로 322, 1층 그랜드볼룸</div>
+            
+            <div class="map-ph">[ Interactive Map Placeholder ]</div>
+
+            <div class="info-card">
+                <h3>지하철 이용시</h3>
+                <p style="font-size: 0.85rem; line-height: 1.6;">6호선 한강진역 2번 출구<br>주말 무료 셔틀버스 10분 간격 운행</p>
+            </div>
+            <div class="info-card">
+                <h3>주차 안내</h3>
+                <p style="font-size: 0.85rem; line-height: 1.6;">호텔 내 주차장 무료 이용 가능 (하객 3시간 무료)</p>
+            </div>
+        </section>
+
+        <!-- Account -->
+        <section class="section" style="padding-top:0;">
+            <div class="sec-title">Gift</div>
+            <div class="info-card">
+                <h3>신랑측 마음 전하실 곳</h3>
+                <div style="font-size: 0.9rem;">
+                    <p>우리은행 1002-123-456789 (김도윤)</p>
+                    <button class="copy-btn">계좌번호 복사</button>
+                </div>
+            </div>
+            <div class="info-card">
+                <h3>신부측 마음 전하실 곳</h3>
+                <div style="font-size: 0.9rem;">
+                    <p>신한은행 110-987-654321 (이서연)</p>
+                    <button class="copy-btn">계좌번호 복사</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-script">Thank You</div>
+            <div style="font-family:var(--font-en); font-size:0.7rem; letter-spacing:2px; margin-top:20px; opacity:0.5;">
+                CREATED WITH STUDIO CHAOS
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>

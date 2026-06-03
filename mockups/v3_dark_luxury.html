@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>VIP Invitation - Doyun & Seoyeon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;700&family=Noto+Serif+KR:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #0A0A0A; /* Deep Black */
+            --bg-card: #141414;
+            --text-main: #FFFFFF;
+            --text-light: #888888;
+            --gold-light: #F9F1CC;
+            --gold-main: #D4AF37;
+            --gold-dark: #8C6D14;
+            --font-en: 'Cinzel', serif;
+            --font-ko: 'Noto Serif KR', serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background-color: #000;
+            color: var(--text-main);
+            font-family: var(--font-ko);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-color);
+            position: relative;
+            min-height: 100vh;
+            overflow-x: hidden;
+            border-left: 1px solid #222;
+            border-right: 1px solid #222;
+        }
+
+        /* Gold Gradient Text utility */
+        .gold-text {
+            background: linear-gradient(to right, var(--gold-dark), var(--gold-light), var(--gold-main));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: inline-block;
+        }
+
+        /* Hero */
+        .hero {
+            height: 100vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 40px;
+            background-image: linear-gradient(to top, var(--bg-color) 0%, transparent 60%), url('https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=800&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-date {
+            font-family: var(--font-en);
+            font-size: 1rem;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            color: var(--gold-main);
+        }
+
+        .hero-names {
+            font-family: var(--font-en);
+            font-size: 3.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-venue {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            letter-spacing: 1px;
+            font-weight: 300;
+        }
+
+        /* Sections */
+        .section {
+            padding: 80px 30px;
+            text-align: center;
+            border-top: 1px solid #1a1a1a;
+        }
+
+        .sec-title {
+            font-family: var(--font-en);
+            font-size: 1.5rem;
+            letter-spacing: 5px;
+            margin-bottom: 40px;
+            position: relative;
+            display: inline-block;
+        }
+        .sec-title::after {
+            content: "";
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 1px;
+            background: var(--gold-main);
+        }
+
+        .greeting-text {
+            font-size: 1rem;
+            line-height: 2.4;
+            font-weight: 300;
+            color: #ddd;
+            margin-bottom: 50px;
+        }
+
+        /* Grid Gallery */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .gal-item {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 4px;
+            filter: grayscale(40%);
+            transition: filter 0.3s;
+        }
+        .gal-item.span-2 {
+            grid-column: span 2;
+            height: 300px;
+        }
+        .gal-item:hover {
+            filter: grayscale(0%);
+        }
+
+        /* Luxury Calendar */
+        .cal-box {
+            background: var(--bg-card);
+            border: 1px solid #333;
+            padding: 40px 20px;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+        .cal-box::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(to right, transparent, var(--gold-main), transparent);
+        }
+
+        .grid-cal {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 15px 10px;
+            font-family: var(--font-en);
+            font-size: 1rem;
+            color: #bbb;
+            margin-top: 30px;
+        }
+        .grid-cal .header {
+            color: var(--gold-main);
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        .cal-day.highlight {
+            color: var(--bg-color);
+            background: var(--gold-main);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            box-shadow: 0 0 15px rgba(212,175,55,0.4);
+        }
+
+        /* Action Buttons */
+        .btn-gold {
+            display: block;
+            width: 100%;
+            padding: 18px;
+            background: transparent;
+            color: var(--gold-main);
+            border: 1px solid var(--gold-main);
+            font-family: var(--font-en);
+            font-size: 1rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 15px;
+        }
+        .btn-gold:hover {
+            background: var(--gold-main);
+            color: var(--bg-color);
+        }
+
+        /* Account Cards */
+        .acc-card {
+            background: var(--bg-card);
+            border: 1px solid #222;
+            padding: 25px;
+            margin-bottom: 15px;
+            text-align: left;
+            border-radius: 4px;
+        }
+        .acc-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: var(--gold-main);
+            font-size: 1rem;
+            margin-bottom: 15px;
+            border-bottom: 1px solid #222;
+            padding-bottom: 10px;
+        }
+        .acc-number {
+            font-family: var(--font-en);
+            font-size: 1.1rem;
+            color: #fff;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 80px 20px;
+            text-align: center;
+            background: #050505;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        
+        <section class="hero">
+            <div class="hero-date">SEP 12, 2026</div>
+            <h1 class="hero-names">
+                <span class="gold-text">Doyun</span><br>
+                & <span class="gold-text">Seoyeon</span>
+            </h1>
+            <div class="hero-venue">GRAND HYATT SEOUL, GRAND BALLROOM</div>
+        </section>
+
+        <section class="section">
+            <h2 class="sec-title gold-text">INVITATION</h2>
+            <div class="greeting-text">
+                어둠 속에서도 빛을 잃지 않는<br>
+                별처럼 서로를 아끼며 살겠습니다.<br><br>
+                저희 두 사람의 새로운 출발에<br>
+                귀한 발걸음으로 함께해 주시면<br>
+                더없는 영광으로 간직하겠습니다.
+            </div>
+            
+            <div style="font-size: 1rem; color: #aaa; line-height: 2;">
+                김영수 · 박미정 의 <span style="font-size: 0.8rem;">장남</span> <span class="gold-text" style="font-size:1.2rem;">도윤</span><br>
+                이진호 · 최수연 의 <span style="font-size: 0.8rem;">차녀</span> <span class="gold-text" style="font-size:1.2rem;">서연</span>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="sec-title gold-text">GALLERY</h2>
+            <div class="gallery-grid">
+                <img src="https://images.unsplash.com/photo-1544078755-9bb50392f2b3?q=80&w=600&auto=format&fit=crop" class="gal-item span-2" alt="Couple">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=400&auto=format&fit=crop" class="gal-item" alt="Details">
+                <img src="https://images.unsplash.com/photo-1606800052052-a08af7148866?q=80&w=400&auto=format&fit=crop" class="gal-item" alt="Couple">
+                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=600&auto=format&fit=crop" class="gal-item span-2" alt="Couple">
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="sec-title gold-text">THE DAY</h2>
+            <div class="cal-box">
+                <div style="font-family:var(--font-en); font-size:1.5rem; color:#fff;">SEPTEMBER</div>
+                <div class="grid-cal">
+                    <div class="header">S</div><div class="header">M</div><div class="header">T</div><div class="header">W</div><div class="header">T</div><div class="header">F</div><div class="header">S</div>
+                    <div></div><div></div><div>1</div><div>2</div><div>3</div><div>4</div><div>5</div>
+                    <div>6</div><div>7</div><div>8</div><div>9</div><div>10</div><div>11</div><div><div class="cal-day highlight">12</div></div>
+                    <div>13</div><div>14</div><div>15</div><div>16</div><div>17</div><div>18</div><div>19</div>
+                    <div>20</div><div>21</div><div>22</div><div>23</div><div>24</div><div>25</div><div>26</div>
+                    <div>27</div><div>28</div><div>29</div><div>30</div><div></div><div></div><div></div>
+                </div>
+            </div>
+            <div style="margin-top: 20px; font-size: 0.9rem; color: var(--text-light);">
+                2026년 9월 12일 토요일 오후 2시
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="sec-title gold-text">LOCATION</h2>
+            <h3 style="font-size: 1.3rem; margin-bottom: 10px; color: #fff;">그랜드 하얏트 서울</h3>
+            <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 30px;">그랜드볼룸 (1층)</p>
+            
+            <div style="width:100%; height:250px; background:#1a1a1a; border:1px solid #333; display:flex; align-items:center; justify-content:center; margin-bottom:30px;">
+                <span style="color:var(--gold-main); font-family:var(--font-en);">MAP</span>
+            </div>
+
+            <button class="btn-gold">NAVER MAP</button>
+            <button class="btn-gold">KAKAO MAP</button>
+        </section>
+
+        <section class="section">
+            <h2 class="sec-title gold-text">GIFT</h2>
+            <p style="font-size: 0.9rem; color: var(--text-light); margin-bottom: 30px; line-height: 1.8;">
+                참석이 어려우신 분들을 위해<br>계좌번호를 기재하였습니다.
+            </p>
+            
+            <div class="acc-card">
+                <div class="acc-title">
+                    <span>GROOM</span>
+                    <span>신랑측 계좌</span>
+                </div>
+                <div class="acc-number">1002-123-456789</div>
+                <div style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">우리은행 (예금주: 김도윤)</div>
+                <button class="btn-gold" style="padding: 10px; font-size: 0.8rem; margin: 0;">COPY</button>
+            </div>
+
+            <div class="acc-card">
+                <div class="acc-title">
+                    <span>BRIDE</span>
+                    <span>신부측 계좌</span>
+                </div>
+                <div class="acc-number">110-987-654321</div>
+                <div style="font-size:0.8rem; color:#aaa; margin-bottom:15px;">신한은행 (예금주: 이서연)</div>
+                <button class="btn-gold" style="padding: 10px; font-size: 0.8rem; margin: 0;">COPY</button>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div class="gold-text" style="font-family:var(--font-en); font-size: 2rem;">THANK YOU</div>
+            <div style="margin-top: 30px; font-family:var(--font-en); font-size:0.7rem; color:#555; letter-spacing: 2px;">
+                STUDIO CHAOS EXCLUSIVE
+            </div>
+        </footer>
+
+    </div>
+</body>
+</html>

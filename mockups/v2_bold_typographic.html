@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Doyun & Seoyeon - The Wedding</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Noto+Sans+KR:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #FA4616; /* Bold Vermillion Orange */
+            --text-main: #FFFFFF;
+            --text-dark: #111111;
+            --font-en: 'Anton', sans-serif;
+            --font-ko: 'Noto Sans KR', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--text-dark);
+            color: var(--text-main);
+            font-family: var(--font-ko);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background: var(--bg-color);
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Marquee */
+        .marquee-wrapper {
+            background: var(--text-dark);
+            color: var(--bg-color);
+            padding: 10px 0;
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+            z-index: 10;
+        }
+        .marquee {
+            display: inline-block;
+            font-family: var(--font-en);
+            font-size: 1.5rem;
+            text-transform: uppercase;
+            animation: scroll 15s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Hero */
+        .hero {
+            height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            padding: 20px;
+        }
+        
+        .giant-text {
+            font-family: var(--font-en);
+            font-size: 25vw; /* Extremely large */
+            line-height: 0.8;
+            text-transform: uppercase;
+            text-align: center;
+            color: var(--bg-color);
+            -webkit-text-stroke: 2px var(--text-main);
+            position: relative;
+            z-index: 2;
+            word-break: break-all;
+            margin-top: -20px;
+        }
+
+        .hero-img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 60%;
+            object-fit: cover;
+            z-index: 1;
+            filter: grayscale(100%) contrast(1.2);
+            mix-blend-mode: multiply;
+        }
+
+        .hero-badge {
+            position: absolute;
+            bottom: 30px;
+            right: 20px;
+            background: var(--text-dark);
+            color: var(--bg-color);
+            font-family: var(--font-en);
+            font-size: 1.2rem;
+            padding: 10px 15px;
+            transform: rotate(-10deg);
+            z-index: 3;
+        }
+
+        /* Intro Grid */
+        .grid-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 2px solid var(--text-main);
+            border-bottom: 2px solid var(--text-main);
+        }
+        .grid-item {
+            padding: 30px 20px;
+            border-right: 2px solid var(--text-main);
+        }
+        .grid-item:last-child {
+            border-right: none;
+        }
+        
+        .section-title {
+            font-family: var(--font-en);
+            font-size: 3rem;
+            line-height: 1;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+        .ko-text {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            font-weight: 700;
+        }
+
+        /* Bold Date */
+        .date-section {
+            padding: 60px 20px;
+            text-align: center;
+            background: var(--text-main);
+            color: var(--bg-color);
+        }
+        .huge-number {
+            font-family: var(--font-en);
+            font-size: 8rem;
+            line-height: 0.9;
+        }
+        .date-details {
+            font-weight: 900;
+            font-size: 1.2rem;
+            margin-top: 10px;
+            letter-spacing: 2px;
+        }
+
+        /* Action Buttons */
+        .action-btn {
+            display: block;
+            width: 100%;
+            padding: 20px;
+            margin: 20px 0;
+            background: var(--text-dark);
+            color: var(--text-main);
+            font-family: var(--font-en);
+            font-size: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .action-btn:hover {
+            background: var(--text-main);
+            color: var(--text-dark);
+        }
+
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        
+        <div class="marquee-wrapper">
+            <div class="marquee">
+                WE ARE GETTING MARRIED • DOYUN & SEOYEON • SEP 12 2026 • WE ARE GETTING MARRIED • DOYUN & SEOYEON • SEP 12 2026 • 
+            </div>
+        </div>
+
+        <section class="hero">
+            <img src="https://images.unsplash.com/photo-1542042161784-26ab9e041e89?q=80&w=800&auto=format&fit=crop" class="hero-img" alt="Couple">
+            <div class="giant-text">
+                JOIN<br>US
+            </div>
+            <div class="hero-badge">NO. 1</div>
+        </section>
+
+        <section class="grid-section">
+            <div class="grid-item">
+                <div class="section-title">Who</div>
+                <div class="ko-text">
+                    김도윤<br>이서연
+                </div>
+            </div>
+            <div class="grid-item">
+                <div class="section-title">When</div>
+                <div class="ko-text">
+                    2026. 09. 12<br>SAT PM 2:00
+                </div>
+            </div>
+        </section>
+
+        <section style="padding: 40px 20px;">
+            <p class="ko-text" style="font-size: 1.1rem; text-align: justify; word-break: keep-all;">
+                서로의 다름을 존중하고, 같은 곳을 바라보며 평생의 동반자가 되기로 약속했습니다. 저희의 새로운 시작을 함께 축하해 주세요.
+            </p>
+            <button class="action-btn">RSVP NOW</button>
+        </section>
+
+        <section class="date-section">
+            <div class="section-title" style="color:var(--text-dark); font-size: 2rem;">SAVE THE DATE</div>
+            <div class="huge-number">09/12</div>
+            <div class="date-details">2026 • GRAND HYATT</div>
+        </section>
+
+        <div class="marquee-wrapper" style="background:var(--text-main); color:var(--text-dark);">
+            <div class="marquee" style="animation-direction: reverse;">
+                LOCATION: SEOUL • PARKING AVAILABLE • LOCATION: SEOUL • PARKING AVAILABLE • 
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
