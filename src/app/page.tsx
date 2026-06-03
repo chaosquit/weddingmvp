@@ -1,137 +1,128 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
-import type { CSSProperties, ReactNode } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 
 type AudienceKey = 'friends' | 'family' | 'public';
-type ModuleKey = 'cover' | 'intro' | 'gallery' | 'calendar' | 'map' | 'gift' | 'rsvp' | 'guestbook';
+type SectionKey = 'hero' | 'intro' | 'gallery' | 'schedule' | 'location' | 'rsvp' | 'gift' | 'guestbook';
+type GalleryLayout = 'grid' | 'slide' | 'pinterest' | 'film';
 
 type Template = {
   id: string;
   name: string;
-  category: string;
+  tone: string;
   description: string;
-  className: string;
   accent: string;
-  background: string;
+  surface: string;
+  className: string;
   cover: string;
-  motion: string;
 };
 
-type Audience = {
-  id: AudienceKey;
+type InvitationSection = {
+  id: SectionKey;
   label: string;
-  description: string;
-  headline: string;
-  link: string;
-  visible: string;
+  help: string;
+  enabled: boolean;
 };
 
-type ModuleItem = {
-  id: ModuleKey;
-  label: string;
-  summary: string;
+type MediaAsset = {
+  name: string;
+  url: string;
+  type: string;
 };
 
 const templates: Template[] = [
   {
     id: 'editorial',
     name: 'Editorial Minimal',
-    category: 'Magazine',
-    description: '여백, 큰 타이포, 화보형 커버를 쓰는 패션 잡지 스타일',
-    className: 'preview-editorial',
-    accent: '#111111',
-    background: '#f6f1e8',
-    cover: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1000&auto=format&fit=crop',
-    motion: '세리프 타이틀 페이드',
+    tone: 'Fashion magazine',
+    description: '여백과 큰 타이포, 한 장의 대표 사진으로 고급스럽게 시작합니다.',
+    accent: '#1f1f1f',
+    surface: '#f5f1e8',
+    className: 'theme-editorial',
+    cover: 'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1200&auto=format&fit=crop',
   },
   {
     id: 'glass',
-    name: 'Glass Studio',
-    category: 'Soft modern',
-    description: '사진 위에 유리 패널과 얇은 정보 모듈을 얹는 앱형 스타일',
-    className: 'preview-glass',
+    name: 'Glass Garden',
+    tone: 'Soft app-like',
+    description: '사진 위에 유리 패널을 얹어 정보와 감성을 부드럽게 분리합니다.',
     accent: '#2f6f73',
-    background: '#edf5f1',
-    cover: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=1000&auto=format&fit=crop',
-    motion: '플로팅 글래스 카드',
+    surface: '#edf5f1',
+    className: 'theme-glass',
+    cover: 'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=1200&auto=format&fit=crop',
   },
   {
     id: 'poster',
     name: 'Bold Poster',
-    category: 'Street issue',
-    description: '강한 포스터 그래픽, 오프셋 프레임, 빠른 타이포 모션',
-    className: 'preview-poster',
+    tone: 'Graphic issue',
+    description: '친구 링크에 어울리는 과감한 포스터 타이포와 인쇄 질감입니다.',
     accent: '#d71920',
-    background: '#fff8ec',
+    surface: '#fff8ec',
+    className: 'theme-poster',
     cover: '/inspiration/type-poster.jpg',
-    motion: '프린트 지터 타이포',
   },
   {
     id: 'luxury',
     name: 'Dark Luxury',
-    category: 'High fashion',
-    description: '블랙, 버건디, 금박 라벨을 쓰는 럭셔리 매거진 스타일',
-    className: 'preview-luxury',
+    tone: 'Evening couture',
+    description: '블랙, 버건디, 금박 라벨로 완성하는 하이패션 청첩장입니다.',
     accent: '#a83f39',
-    background: '#120d0e',
+    surface: '#120d0e',
+    className: 'theme-luxury',
     cover: '/inspiration/street-cover.jpg',
-    motion: '스포트라이트 커버',
   },
   {
     id: 'system',
-    name: 'Minima System',
-    category: 'Clean utility',
-    description: '정보가 먼저 보이는 깔끔한 모바일 앱형 청첩장',
-    className: 'preview-system',
+    name: 'Calm System',
+    tone: 'Information first',
+    description: '일정, 장소, 참석 여부를 가장 빠르게 읽히게 하는 미니멀 타입입니다.',
     accent: '#0f766e',
-    background: '#ffffff',
-    cover: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1000&auto=format&fit=crop',
-    motion: '스냅 섹션 전환',
+    surface: '#ffffff',
+    className: 'theme-system',
+    cover: 'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1200&auto=format&fit=crop',
   },
 ];
 
-const audiences: Audience[] = [
-  {
-    id: 'friends',
+const starterSections: InvitationSection[] = [
+  { id: 'hero', label: '메인 커버', help: '대표 사진/영상, 이름, 첫 인상', enabled: true },
+  { id: 'intro', label: '초대 문구', help: '직접 작성 또는 추천 문구 적용', enabled: true },
+  { id: 'gallery', label: '웨딩 앨범', help: '그리드, 슬라이드, 핀터레스트, 필름', enabled: true },
+  { id: 'schedule', label: '일정', help: '날짜, 시간, 캘린더 강조', enabled: true },
+  { id: 'location', label: '오시는 길', help: '주소, 교통, 주차 안내', enabled: true },
+  { id: 'rsvp', label: '참석 여부', help: '동행 인원, 식사 여부, 메시지', enabled: true },
+  { id: 'gift', label: '마음 전하실 곳', help: '계좌, 복사 버튼, 그룹별 공개', enabled: true },
+  { id: 'guestbook', label: '방명록', help: '축하 메시지와 공개 범위', enabled: false },
+];
+
+const audiences = {
+  friends: {
     label: '친구',
-    description: '가볍고 재치 있는 문구, 애프터 모임, 사진을 더 많이 노출',
     headline: 'Dress up, cry a little, dance a lot.',
+    note: '애프터 모임과 사진을 더 보여주고, 계좌 안내는 접어둡니다.',
     link: 'issue.link/doyun-seoyeon/friends',
-    visible: '사진, 애프터 안내, 참석 여부, 방명록',
   },
-  {
-    id: 'public',
+  public: {
     label: '지인',
-    description: '일정과 장소, 참석 여부가 가장 빨리 보이는 정보 우선 링크',
-    headline: '일정과 장소를 바로 확인하실 수 있습니다.',
+    headline: '일정과 장소를 가장 먼저 확인하실 수 있습니다.',
+    note: '핵심 일정, 지도, 참석 여부를 상단에 배치합니다.',
     link: 'issue.link/doyun-seoyeon/guest',
-    visible: '일정, 장소, 교통, RSVP',
   },
-  {
-    id: 'family',
+  family: {
     label: '가족',
-    description: '정중한 인사말, 혼주 정보, 주차와 계좌 안내를 자세히 노출',
     headline: '귀한 걸음으로 함께해 주세요.',
+    note: '혼주 정보, 주차, 계좌 안내를 자세히 노출합니다.',
     link: 'issue.link/doyun-seoyeon/family',
-    visible: '혼주, 주차, 계좌, 예식 순서',
   },
+} satisfies Record<AudienceKey, { label: string; headline: string; note: string; link: string }>;
+
+const sampleImages = [
+  'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=900&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1523438885200-e635ba2c371e?q=80&w=900&auto=format&fit=crop',
 ];
 
-const baseModules: ModuleItem[] = [
-  { id: 'cover', label: '메인 커버', summary: '첫 사진, 영상, 타이틀 모션' },
-  { id: 'intro', label: '초대 문구', summary: '자동 추천 문구 또는 직접 작성' },
-  { id: 'gallery', label: '앨범', summary: '그리드, 필름, 매거진 스프레드' },
-  { id: 'calendar', label: '일정', summary: '날짜, 시간, 캘린더 강조' },
-  { id: 'map', label: '오시는 길', summary: '지도, 교통, 주차 안내' },
-  { id: 'gift', label: '마음 전하실 곳', summary: '계좌, 복사 버튼, 그룹별 노출' },
-  { id: 'rsvp', label: '참석 여부', summary: '동행 인원, 식사 여부, 메시지' },
-  { id: 'guestbook', label: '방명록', summary: '축하 메시지와 공개 범위' },
-];
-
-const steps = ['로그인', '테마 선택', '정보 입력', '요소 편집', '스타일 조절', '그룹 프리뷰'];
-
-const phraseSuggestions = [
+const writingSuggestions = [
   '서로의 계절이 되어 같은 방향을 바라보려 합니다. 귀한 걸음으로 축복해 주세요.',
   '익숙한 하루들이 모여 특별한 약속이 되었습니다. 소중한 분들을 초대합니다.',
   '작은 우연에서 시작된 이야기를 이제 하나의 집으로 이어가려 합니다.',
@@ -144,15 +135,17 @@ function formatTime(totalSeconds: number) {
 }
 
 export default function Home() {
+  const editorRef = useRef<HTMLElement | null>(null);
+  const [loginOpen, setLoginOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  const [activeStep, setActiveStep] = useState(0);
   const [selectedTemplateId, setSelectedTemplateId] = useState(templates[0].id);
-  const [selectedAudienceId, setSelectedAudienceId] = useState<AudienceKey>('friends');
-  const [selectedModuleId, setSelectedModuleId] = useState<ModuleKey>('cover');
-  const [modules, setModules] = useState(baseModules);
-  const [draggedModule, setDraggedModule] = useState<ModuleKey | null>(null);
+  const [selectedAudience, setSelectedAudience] = useState<AudienceKey>('friends');
+  const [selectedSectionId, setSelectedSectionId] = useState<SectionKey>('hero');
+  const [draggingSection, setDraggingSection] = useState<SectionKey | null>(null);
+  const [sections, setSections] = useState(starterSections);
+  const [mediaAssets, setMediaAssets] = useState<MediaAsset[]>([]);
   const [previewStarted, setPreviewStarted] = useState(false);
-  const [paymentOpen, setPaymentOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [secondsLeft, setSecondsLeft] = useState(300);
   const [form, setForm] = useState({
     title: 'The September Wedding Issue',
@@ -160,21 +153,17 @@ export default function Home() {
     bride: '이서연',
     date: '2026.09.12 Sat',
     time: '오후 2시',
-    venue: '그랜드 하얏트 서울, 그랜드볼룸',
+    venue: '그랜드 하얏트 서울 그랜드볼룸',
     address: '서울 용산구 소월로 322',
-    greeting: phraseSuggestions[0],
-    heroMotion: 'cinematic',
-    albumStyle: 'magazine',
-    typography: 'soft-reveal',
-    ornament: 'line',
-    tone: 'warm',
+    greeting: writingSuggestions[0],
   });
-  const [style, setStyle] = useState({
+  const [design, setDesign] = useState({
     accent: templates[0].accent,
-    background: templates[0].background,
-    contrast: 'balanced',
-    photoFx: 'grain',
-    density: 'editorial',
+    surface: templates[0].surface,
+    galleryLayout: 'pinterest' as GalleryLayout,
+    heroMotion: 'cinematic',
+    typography: 'balanced',
+    decoration: 'line',
   });
 
   const selectedTemplate = useMemo(
@@ -182,18 +171,22 @@ export default function Home() {
     [selectedTemplateId],
   );
 
-  const selectedAudience = useMemo(
-    () => audiences.find((audience) => audience.id === selectedAudienceId) ?? audiences[0],
-    [selectedAudienceId],
+  const enabledSections = useMemo(() => sections.filter((section) => section.enabled), [sections]);
+  const activeSection = useMemo(
+    () => sections.find((section) => section.id === selectedSectionId) ?? sections[0],
+    [sections, selectedSectionId],
   );
 
-  const selectedModule = useMemo(
-    () => modules.find((module) => module.id === selectedModuleId) ?? modules[0],
-    [modules, selectedModuleId],
-  );
+  const previewImages = mediaAssets.length > 0 ? mediaAssets.map((asset) => asset.url) : sampleImages;
 
   useEffect(() => {
-    if (!previewStarted || paymentOpen || secondsLeft <= 0) {
+    return () => {
+      mediaAssets.forEach((asset) => URL.revokeObjectURL(asset.url));
+    };
+  }, [mediaAssets]);
+
+  useEffect(() => {
+    if (!previewStarted || checkoutOpen || secondsLeft <= 0) {
       return;
     }
 
@@ -202,33 +195,46 @@ export default function Home() {
     }, 1000);
 
     return () => window.clearInterval(timer);
-  }, [paymentOpen, previewStarted, secondsLeft]);
+  }, [checkoutOpen, previewStarted, secondsLeft]);
+
+  const chooseTemplate = (template: Template) => {
+    setSelectedTemplateId(template.id);
+    setDesign((current) => ({
+      ...current,
+      accent: template.accent,
+      surface: template.surface,
+    }));
+  };
+
+  const requestStart = () => {
+    if (!loggedIn) {
+      setLoginOpen(true);
+      return;
+    }
+    editorRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const completeLogin = () => {
+    setLoggedIn(true);
+    setLoginOpen(false);
+    window.setTimeout(() => editorRef.current?.scrollIntoView({ behavior: 'smooth' }), 80);
+  };
 
   const updateForm = (key: keyof typeof form, value: string) => {
     setForm((current) => ({ ...current, [key]: value }));
   };
 
-  const updateStyle = (key: keyof typeof style, value: string) => {
-    setStyle((current) => ({ ...current, [key]: value }));
+  const updateDesign = (key: keyof typeof design, value: string) => {
+    setDesign((current) => ({ ...current, [key]: value }));
   };
 
-  const startMaking = () => {
-    document.getElementById('builder')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const fakeLogin = () => {
-    setLoggedIn(true);
-    setActiveStep(1);
-  };
-
-  const moveModule = (id: ModuleKey, direction: -1 | 1) => {
-    setModules((current) => {
-      const index = current.findIndex((module) => module.id === id);
+  const moveSection = (id: SectionKey, direction: -1 | 1) => {
+    setSections((current) => {
+      const index = current.findIndex((section) => section.id === id);
       const nextIndex = index + direction;
       if (nextIndex < 0 || nextIndex >= current.length) {
         return current;
       }
-
       const next = [...current];
       const [item] = next.splice(index, 1);
       next.splice(nextIndex, 0, item);
@@ -236,98 +242,86 @@ export default function Home() {
     });
   };
 
-  const dropModule = (targetId: ModuleKey) => {
-    if (!draggedModule || draggedModule === targetId) {
+  const dropSection = (targetId: SectionKey) => {
+    if (!draggingSection || draggingSection === targetId) {
       return;
     }
-
-    setModules((current) => {
-      const moving = current.find((module) => module.id === draggedModule);
+    setSections((current) => {
+      const moving = current.find((section) => section.id === draggingSection);
       if (!moving) {
         return current;
       }
-
-      const withoutMoving = current.filter((module) => module.id !== draggedModule);
-      const targetIndex = withoutMoving.findIndex((module) => module.id === targetId);
-      const next = [...withoutMoving];
+      const rest = current.filter((section) => section.id !== draggingSection);
+      const targetIndex = rest.findIndex((section) => section.id === targetId);
+      const next = [...rest];
       next.splice(targetIndex, 0, moving);
       return next;
     });
-    setDraggedModule(null);
+    setDraggingSection(null);
+  };
+
+  const toggleSection = (id: SectionKey) => {
+    setSections((current) =>
+      current.map((section) => (section.id === id ? { ...section, enabled: !section.enabled } : section)),
+    );
+  };
+
+  const uploadMedia = (files: FileList | null) => {
+    if (!files) {
+      return;
+    }
+    mediaAssets.forEach((asset) => URL.revokeObjectURL(asset.url));
+    const nextAssets = Array.from(files)
+      .slice(0, 8)
+      .map((file) => ({
+        name: file.name,
+        type: file.type || 'image',
+        url: URL.createObjectURL(file),
+      }));
+    setMediaAssets(nextAssets);
   };
 
   return (
-    <main className="product-shell">
-      <nav className="topbar">
-        <a className="brand" href="#top">Issue Invite</a>
+    <main className="app-shell">
+      <nav className="site-nav">
+        <a href="#top" className="brand">Issue Invite</a>
         <div>
-          <a href="#templates">테마</a>
-          <a href="#builder">만들기</a>
-          <a href="#result">결과물</a>
+          <a href="#samples">샘플</a>
+          <a href="#editor">에디터</a>
+          <a href="#preview">결과 확인</a>
         </div>
+        <button onClick={requestStart} type="button">무료 시안 만들기</button>
       </nav>
 
-      <section className="landing" id="top">
-        <div className="landing-copy">
-          <span className="label">Mobile invitation builder</span>
-          <h1>템플릿을 고르고, 필요한 정보만 채우면 바로 모청 시안이 완성됩니다.</h1>
+      <section className="hero" id="top">
+        <div className="hero-copy">
+          <span className="eyebrow">Premium mobile invitation studio</span>
+          <h1>하객마다 다른 링크, 잡지처럼 완성되는 모바일 청첩장.</h1>
           <p>
-            랜딩은 단정하게, 제작 과정은 쉽게, 결과물은 매거진처럼 감각적으로. 결혼식으로
-            시작하지만 돌잔치, 생일, 전시, 세미나까지 확장 가능한 이벤트 초대장 플랫폼입니다.
+            사진을 올리고, 템플릿을 고르고, 필요한 섹션만 정리하세요. 친구, 지인, 가족에게
+            서로 다른 문구와 정보가 보이는 프리미엄 청첩장을 무료 시안으로 먼저 확인할 수 있습니다.
           </p>
-          <div className="landing-actions">
-            <button onClick={startMaking} type="button">샘플 만들기</button>
-            <a href="#result">그룹별 결과 보기</a>
+          <div className="hero-actions">
+            <button onClick={requestStart} type="button">무료 시안 만들기</button>
+            <a href="#samples">완성 샘플 보기</a>
+          </div>
+          <div className="trust-row">
+            <span>5분 프리뷰</span>
+            <span>그룹별 링크</span>
+            <span>사진 기반 에디터</span>
           </div>
         </div>
 
-        <div className="landing-product" aria-label="service flow preview">
-          <div className="flow-card is-dark">
-            <span>01</span>
-            <strong>Google Login</strong>
-            <small>나중에 실제 연동</small>
-          </div>
-          <div className="flow-card">
-            <span>02</span>
-            <strong>Theme First</strong>
-            <small>테마 선택 후 입력 구조 자동 세팅</small>
-          </div>
-          <div className="flow-card">
-            <span>03</span>
-            <strong>Drag Modules</strong>
-            <small>커버, 앨범, 지도, RSVP 순서 편집</small>
-          </div>
-          <div className="flow-card is-accent">
-            <span>04</span>
-            <strong>5 Minute Preview</strong>
-            <small>친구, 지인, 가족 링크별 확인</small>
-          </div>
-        </div>
-      </section>
-
-      <section className="template-strip" id="templates">
-        <div className="section-title">
-          <span className="label">Choose theme</span>
-          <h2>먼저 테마를 고르면, 그 테마에 맞는 입력과 스타일 옵션이 열립니다.</h2>
-        </div>
-        <div className="template-row">
-          {templates.map((template) => (
+        <div className="hero-gallery" aria-label="finished invitation samples">
+          {templates.slice(0, 3).map((template) => (
             <button
-              className={selectedTemplate.id === template.id ? 'theme-card is-selected' : 'theme-card'}
+              className={`sample-phone ${selectedTemplateId === template.id ? 'is-active' : ''}`}
               key={template.id}
-              onClick={() => {
-                setSelectedTemplateId(template.id);
-                setStyle((value) => ({
-                  ...value,
-                  accent: template.accent,
-                  background: template.background,
-                }));
-                setActiveStep(Math.max(activeStep, 2));
-              }}
-              style={{ '--theme-accent': template.accent } as CSSProperties}
+              onClick={() => chooseTemplate(template)}
+              style={{ '--accent': template.accent, '--cover': `url(${template.cover})` } as CSSProperties}
               type="button"
             >
-              <span>{template.category}</span>
+              <span>{template.tone}</span>
               <strong>{template.name}</strong>
               <small>{template.description}</small>
             </button>
@@ -335,284 +329,252 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="builder" id="builder">
-        <div className="builder-header">
-          <div>
-            <span className="label">Actual creation flow</span>
-            <h2>로그인하는 척하고, 실제 모청 샘플을 끝까지 만들어봅니다.</h2>
-          </div>
-          <button className={loggedIn ? 'login-button is-done' : 'login-button'} onClick={fakeLogin} type="button">
-            {loggedIn ? 'Google 계정 연결됨' : 'Google로 시작하기'}
-          </button>
+      <section className="sample-section" id="samples">
+        <div className="section-heading">
+          <span className="eyebrow">Template gallery</span>
+          <h2>완성된 샘플을 먼저 보고, 마음에 드는 방향에서 시작하세요.</h2>
         </div>
-
-        <div className="stepper" aria-label="builder steps">
-          {steps.map((step, index) => (
+        <div className="template-grid">
+          {templates.map((template) => (
             <button
-              className={activeStep === index ? 'is-active' : activeStep > index ? 'is-complete' : ''}
-              key={step}
-              onClick={() => loggedIn && setActiveStep(index)}
+              className={selectedTemplateId === template.id ? 'template-card is-selected' : 'template-card'}
+              key={template.id}
+              onClick={() => chooseTemplate(template)}
+              style={{ '--accent': template.accent, '--surface': template.surface, '--cover': `url(${template.cover})` } as CSSProperties}
               type="button"
             >
-              <span>{String(index + 1).padStart(2, '0')}</span>
-              {step}
+              <i />
+              <span>{template.tone}</span>
+              <strong>{template.name}</strong>
+              <small>{template.description}</small>
             </button>
           ))}
         </div>
+      </section>
 
-        <div className="workspace">
-          <div className="editor-panels">
-            {!loggedIn ? (
-              <LoginPanel fakeLogin={fakeLogin} />
-            ) : (
-              <>
-                <Panel title="기본 정보 입력" kicker="Content">
-                  <div className="field-grid">
-                    <label>
-                      초대장 제목
-                      <input value={form.title} onChange={(event) => updateForm('title', event.target.value)} />
-                    </label>
-                    <label>
-                      신랑
-                      <input value={form.groom} onChange={(event) => updateForm('groom', event.target.value)} />
-                    </label>
-                    <label>
-                      신부
-                      <input value={form.bride} onChange={(event) => updateForm('bride', event.target.value)} />
-                    </label>
-                    <label>
-                      날짜
-                      <input value={form.date} onChange={(event) => updateForm('date', event.target.value)} />
-                    </label>
-                    <label>
-                      시간
-                      <input value={form.time} onChange={(event) => updateForm('time', event.target.value)} />
-                    </label>
-                    <label>
-                      장소
-                      <input value={form.venue} onChange={(event) => updateForm('venue', event.target.value)} />
-                    </label>
-                  </div>
-                  <label className="wide-field">
-                    주소
-                    <input value={form.address} onChange={(event) => updateForm('address', event.target.value)} />
-                  </label>
-                  <label className="wide-field">
-                    초대 문구
-                    <textarea value={form.greeting} onChange={(event) => updateForm('greeting', event.target.value)} />
-                  </label>
-                  <div className="suggestion-row">
-                    {phraseSuggestions.map((phrase) => (
-                      <button key={phrase} onClick={() => updateForm('greeting', phrase)} type="button">
-                        자동 문구 적용
-                      </button>
-                    ))}
-                  </div>
-                </Panel>
-
-                <Panel title="요소 순서와 세부 편집" kicker="Drag and drop">
-                  <div className="module-list">
-                    {modules.map((module, index) => (
-                      <article
-                        className={selectedModuleId === module.id ? 'module-item is-selected' : 'module-item'}
-                        draggable
-                        key={module.id}
-                        onDragOver={(event) => event.preventDefault()}
-                        onDragStart={() => setDraggedModule(module.id)}
-                        onDrop={() => dropModule(module.id)}
-                      >
-                        <button className="module-select" onClick={() => setSelectedModuleId(module.id)} type="button">
-                          <span>{String(index + 1).padStart(2, '0')}</span>
-                          <strong>{module.label}</strong>
-                          <small>{module.summary}</small>
-                        </button>
-                        <div className="module-actions">
-                          <button onClick={() => moveModule(module.id, -1)} type="button">위</button>
-                          <button onClick={() => moveModule(module.id, 1)} type="button">아래</button>
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                  <div className="module-detail">
-                    <span>{selectedModule.label} 세부 옵션</span>
-                    <div className="segmented">
-                      {['기본', '강조', '숨김'].map((value) => (
-                        <button key={value} type="button">{value}</button>
-                      ))}
-                    </div>
-                    <p>{selectedModule.summary}을 현재 테마인 {selectedTemplate.name}에 맞춰 세부 조절합니다.</p>
-                  </div>
-                </Panel>
-
-                <Panel title="디자인 스타일링" kicker="CSS controls">
-                  <div className="control-grid">
-                    <label>
-                      포인트 색
-                      <input
-                        type="color"
-                        value={style.accent}
-                        onChange={(event) => updateStyle('accent', event.target.value)}
-                      />
-                    </label>
-                    <label>
-                      배경 색감
-                      <input
-                        type="color"
-                        value={style.background}
-                        onChange={(event) => updateStyle('background', event.target.value)}
-                      />
-                    </label>
-                    <label>
-                      메인 사진/영상 애니메이션
-                      <select value={form.heroMotion} onChange={(event) => updateForm('heroMotion', event.target.value)}>
-                        <option value="cinematic">시네마틱 줌</option>
-                        <option value="float">부유하는 패널</option>
-                        <option value="poster">포스터 지터</option>
-                      </select>
-                    </label>
-                    <label>
-                      앨범 디자인
-                      <select value={form.albumStyle} onChange={(event) => updateForm('albumStyle', event.target.value)}>
-                        <option value="magazine">매거진 스프레드</option>
-                        <option value="film">필름 롤</option>
-                        <option value="grid">정돈된 그리드</option>
-                      </select>
-                    </label>
-                    <label>
-                      타이포 효과
-                      <select value={form.typography} onChange={(event) => updateForm('typography', event.target.value)}>
-                        <option value="soft-reveal">부드러운 등장</option>
-                        <option value="ticker">흐르는 티커</option>
-                        <option value="stamp">스탬프 오버레이</option>
-                      </select>
-                    </label>
-                    <label>
-                      장식 애니메이션
-                      <select value={form.ornament} onChange={(event) => updateForm('ornament', event.target.value)}>
-                        <option value="line">라인 드로잉</option>
-                        <option value="spark">작은 빛 입자</option>
-                        <option value="paper">종이 질감 페이드</option>
-                      </select>
-                    </label>
-                  </div>
-                </Panel>
-              </>
-            )}
+      <section className="editor-shell" id="editor" ref={editorRef}>
+        <div className="editor-header">
+          <div>
+            <span className="eyebrow">Invitation editor</span>
+            <h2>사진, 섹션, 스타일을 한 화면에서 조정합니다.</h2>
+            <p>템플릿은 출발점일 뿐입니다. 섹션 순서와 공개 범위, 앨범 레이아웃, 색감과 모션까지 세부 조정할 수 있습니다.</p>
           </div>
+          <button onClick={requestStart} type="button">
+            {loggedIn ? '편집 중' : '로그인하고 편집 시작'}
+          </button>
+        </div>
 
-          <aside className="live-preview">
-            <div className="preview-top">
+        <div className={loggedIn ? 'editor-workspace' : 'editor-workspace is-locked'}>
+          {!loggedIn && (
+            <div className="editor-lock">
+              <strong>템플릿을 고른 뒤 무료 시안을 저장하세요.</strong>
+              <span>사진과 정보를 안전하게 보관하고, 이어서 편집할 수 있도록 로그인을 진행합니다.</span>
+              <button onClick={() => setLoginOpen(true)} type="button">무료 시안 만들기</button>
+            </div>
+          )}
+
+          <aside className="component-panel">
+            <span className="eyebrow">Components</span>
+            <h3>섹션 구성</h3>
+            <div className="section-list">
+              {sections.map((section, index) => (
+                <article
+                  className={selectedSectionId === section.id ? 'section-item is-selected' : 'section-item'}
+                  draggable={loggedIn}
+                  key={section.id}
+                  onDragOver={(event) => event.preventDefault()}
+                  onDragStart={() => setDraggingSection(section.id)}
+                  onDrop={() => dropSection(section.id)}
+                >
+                  <button onClick={() => setSelectedSectionId(section.id)} type="button">
+                    <span>{String(index + 1).padStart(2, '0')}</span>
+                    <strong>{section.label}</strong>
+                    <small>{section.help}</small>
+                  </button>
+                  <div>
+                    <button onClick={() => moveSection(section.id, -1)} type="button">위</button>
+                    <button onClick={() => moveSection(section.id, 1)} type="button">아래</button>
+                    <button onClick={() => toggleSection(section.id)} type="button">
+                      {section.enabled ? '노출' : '숨김'}
+                    </button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </aside>
+
+          <section className="inspector-panel">
+            <div className="panel-block">
+              <span className="eyebrow">Wedding details</span>
+              <h3>기본 정보</h3>
+              <div className="field-grid">
+                <label>제목<input value={form.title} onChange={(event) => updateForm('title', event.target.value)} /></label>
+                <label>신랑<input value={form.groom} onChange={(event) => updateForm('groom', event.target.value)} /></label>
+                <label>신부<input value={form.bride} onChange={(event) => updateForm('bride', event.target.value)} /></label>
+                <label>날짜<input value={form.date} onChange={(event) => updateForm('date', event.target.value)} /></label>
+                <label>시간<input value={form.time} onChange={(event) => updateForm('time', event.target.value)} /></label>
+                <label>장소<input value={form.venue} onChange={(event) => updateForm('venue', event.target.value)} /></label>
+              </div>
+              <label className="wide-field">주소<input value={form.address} onChange={(event) => updateForm('address', event.target.value)} /></label>
+              <label className="wide-field">초대 문구<textarea value={form.greeting} onChange={(event) => updateForm('greeting', event.target.value)} /></label>
+              <div className="copy-suggestions">
+                {writingSuggestions.map((copy) => (
+                  <button key={copy} onClick={() => updateForm('greeting', copy)} type="button">추천 문구 적용</button>
+                ))}
+              </div>
+            </div>
+
+            <div className="panel-block">
+              <span className="eyebrow">Photo upload</span>
+              <h3>고해상도 웨딩 사진</h3>
+              <label className="upload-zone">
+                <input accept="image/*,video/*" multiple onChange={(event) => uploadMedia(event.target.files)} type="file" />
+                <strong>사진 또는 짧은 영상을 업로드하세요.</strong>
+                <small>JPG, PNG, HEIC, MP4 권장. 최대 8개까지 미리보기로 반영됩니다.</small>
+              </label>
+              <div className="asset-row">
+                {(mediaAssets.length > 0 ? mediaAssets : sampleImages.map((url, index) => ({ name: `sample-${index + 1}.jpg`, type: 'image', url }))).map((asset) => (
+                  <div className="asset-chip" key={asset.url}>
+                    <i style={{ backgroundImage: `url(${asset.url})` }} />
+                    <span>{asset.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="panel-block">
+              <span className="eyebrow">Design inspector</span>
+              <h3>{activeSection.label} 스타일</h3>
+              <div className="control-grid">
+                <label>포인트 색<input type="color" value={design.accent} onChange={(event) => updateDesign('accent', event.target.value)} /></label>
+                <label>배경 색감<input type="color" value={design.surface} onChange={(event) => updateDesign('surface', event.target.value)} /></label>
+                <label>
+                  앨범 레이아웃
+                  <select value={design.galleryLayout} onChange={(event) => updateDesign('galleryLayout', event.target.value)}>
+                    <option value="grid">정돈된 그리드</option>
+                    <option value="slide">가로 슬라이드</option>
+                    <option value="pinterest">핀터레스트형</option>
+                    <option value="film">필름 롤</option>
+                  </select>
+                </label>
+                <label>
+                  메인 모션
+                  <select value={design.heroMotion} onChange={(event) => updateDesign('heroMotion', event.target.value)}>
+                    <option value="cinematic">시네마틱 줌</option>
+                    <option value="float">부유하는 카드</option>
+                    <option value="still">정적인 화보</option>
+                  </select>
+                </label>
+                <label>
+                  타이포
+                  <select value={design.typography} onChange={(event) => updateDesign('typography', event.target.value)}>
+                    <option value="balanced">정돈된 고딕</option>
+                    <option value="editorial">에디토리얼 세리프</option>
+                    <option value="poster">포스터 타이포</option>
+                  </select>
+                </label>
+                <label>
+                  장식
+                  <select value={design.decoration} onChange={(event) => updateDesign('decoration', event.target.value)}>
+                    <option value="line">라인 드로잉</option>
+                    <option value="spark">빛 입자</option>
+                    <option value="paper">종이 질감</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          </section>
+
+          <aside className="preview-panel">
+            <div className="preview-toolbar">
               <span>{selectedTemplate.name}</span>
-              <strong>{previewStarted ? formatTime(secondsLeft) : '미리보기 대기'}</strong>
+              <strong>{previewStarted ? formatTime(secondsLeft) : 'Preview'}</strong>
             </div>
             <PhonePreview
-              audience={selectedAudience}
+              audience={audiences[selectedAudience]}
+              design={design}
               form={form}
-              modules={modules}
-              previewStarted={previewStarted}
-              secondsLeft={secondsLeft}
-              style={style}
+              images={previewImages}
+              sections={enabledSections}
               template={selectedTemplate}
             />
           </aside>
         </div>
       </section>
 
-      <section className="result-section" id="result">
-        <div className="section-title">
-          <span className="label">Audience preview</span>
-          <h2>최종 결과물은 친구, 지인, 가족 링크별로 다르게 확인합니다.</h2>
+      <section className="audience-section" id="preview">
+        <div className="section-heading">
+          <span className="eyebrow">Audience preview</span>
+          <h2>최종 결과물은 하객 그룹별로 다르게 확인합니다.</h2>
         </div>
-
         <div className="audience-grid">
-          {audiences.map((audience) => (
+          {(Object.keys(audiences) as AudienceKey[]).map((key) => (
             <button
-              className={selectedAudienceId === audience.id ? 'audience-result is-selected' : 'audience-result'}
-              key={audience.id}
-              onClick={() => setSelectedAudienceId(audience.id)}
+              className={selectedAudience === key ? 'audience-card is-active' : 'audience-card'}
+              key={key}
+              onClick={() => setSelectedAudience(key)}
               type="button"
             >
-              <span>{audience.label} 링크</span>
-              <strong>{audience.headline}</strong>
-              <p>{audience.description}</p>
-              <small>{audience.link}</small>
+              <span>{audiences[key].label} 링크</span>
+              <strong>{audiences[key].headline}</strong>
+              <p>{audiences[key].note}</p>
+              <small>{audiences[key].link}</small>
             </button>
           ))}
         </div>
-
         <div className="preview-gate">
           <div>
-            <span className="label">5 minute preview</span>
-            <h3>{previewStarted ? `남은 시간 ${formatTime(secondsLeft)}` : '5분 미리보기 시작 전입니다.'}</h3>
-            <p>샘플 확인은 5분 동안 열리고, 최종 결정 시 결제 페이지로 이동하는 흐름입니다.</p>
-          </div>
-          <div className="gate-actions">
-            <button onClick={() => { setPreviewStarted(true); setSecondsLeft(300); }} type="button">
-              5분 미리보기 시작
-            </button>
-            <button className="dark" onClick={() => setPaymentOpen(true)} type="button">
-              최종 결정하고 결제페이지로
-            </button>
-          </div>
-        </div>
-
-        <div className={paymentOpen ? 'payment-panel is-open' : 'payment-panel'}>
-          <span className="label">Checkout</span>
-          <h3>결제 페이지 시뮬레이션</h3>
-          <p>{selectedTemplate.name} 테마와 {selectedAudience.label} 링크 구성이 결제 대기 상태로 저장되었습니다.</p>
-          <div>
-            <strong>상품</strong>
-            <span>프리미엄 모바일 초대장 발급</span>
+            <span className="eyebrow">5 minute preview</span>
+            <h3>{previewStarted ? `남은 시간 ${formatTime(secondsLeft)}` : '무료 미리보기를 시작해 보세요.'}</h3>
+            <p>미리보기는 5분 동안 열립니다. 최종 결정 후 결제 페이지에서 링크 발급을 진행합니다.</p>
           </div>
           <div>
-            <strong>발급 링크</strong>
-            <span>{selectedAudience.link}</span>
+            <button onClick={() => { setPreviewStarted(true); setSecondsLeft(300); }} type="button">5분 미리보기 시작</button>
+            <button className="dark" onClick={() => setCheckoutOpen(true)} type="button">결제 페이지로 이동</button>
           </div>
         </div>
+        {checkoutOpen && (
+          <div className="checkout-card">
+            <span className="eyebrow">Checkout</span>
+            <h3>결제 대기 상태로 저장되었습니다.</h3>
+            <p>{selectedTemplate.name} 템플릿과 {audiences[selectedAudience].label} 링크 설정을 기준으로 발급 준비가 완료되었습니다.</p>
+            <div><strong>발급 링크</strong><span>{audiences[selectedAudience].link}</span></div>
+          </div>
+        )}
       </section>
+
+      {loginOpen && (
+        <div className="modal-backdrop" role="presentation">
+          <section aria-label="login modal" className="login-modal">
+            <span className="eyebrow">Draft access</span>
+            <h2>무료 시안을 저장하고 계속 편집하세요.</h2>
+            <p>로그인하면 선택한 템플릿과 입력한 정보를 보관하고, 미리보기 링크를 이어서 확인할 수 있습니다.</p>
+            <button onClick={completeLogin} type="button">Google로 계속하기</button>
+            <button className="ghost" onClick={() => setLoginOpen(false)} type="button">조금 더 둘러보기</button>
+          </section>
+        </div>
+      )}
     </main>
-  );
-}
-
-function Panel({
-  children,
-  kicker,
-  title,
-}: {
-  children: ReactNode;
-  kicker: string;
-  title: string;
-}) {
-  return (
-    <article className="panel">
-      <span className="label">{kicker}</span>
-      <h3>{title}</h3>
-      {children}
-    </article>
-  );
-}
-
-function LoginPanel({ fakeLogin }: { fakeLogin: () => void }) {
-  return (
-    <article className="login-panel">
-      <span className="label">Login required</span>
-      <h3>샘플 제작을 시작하려면 먼저 Google 로그인을 진행합니다.</h3>
-      <p>현재는 실제 인증 없이 로그인된 것처럼 상태만 바꿉니다. 나중에 OAuth와 사용자 저장소를 연결하면 됩니다.</p>
-      <button onClick={fakeLogin} type="button">Google로 계속하기</button>
-    </article>
   );
 }
 
 function PhonePreview({
   audience,
+  design,
   form,
-  modules,
-  previewStarted,
-  secondsLeft,
-  style,
+  images,
+  sections,
   template,
 }: {
-  audience: Audience;
+  audience: { label: string; headline: string; note: string; link: string };
+  design: {
+    accent: string;
+    surface: string;
+    galleryLayout: string;
+    heroMotion: string;
+    typography: string;
+    decoration: string;
+  };
   form: {
     title: string;
     groom: string;
@@ -622,152 +584,113 @@ function PhonePreview({
     venue: string;
     address: string;
     greeting: string;
-    heroMotion: string;
-    albumStyle: string;
-    typography: string;
-    ornament: string;
-    tone: string;
   };
-  modules: ModuleItem[];
-  previewStarted: boolean;
-  secondsLeft: number;
-  style: {
-    accent: string;
-    background: string;
-    contrast: string;
-    photoFx: string;
-    density: string;
-  };
+  images: string[];
+  sections: InvitationSection[];
   template: Template;
 }) {
   return (
     <article
-      className={`phone ${template.className} motion-${form.heroMotion} type-${form.typography} album-${form.albumStyle}`}
+      className={`phone ${template.className} layout-${design.galleryLayout} motion-${design.heroMotion} typo-${design.typography}`}
       style={
         {
-          '--accent': style.accent,
-          '--phone-bg': style.background,
-          '--cover': `url(${template.cover})`,
+          '--accent': design.accent,
+          '--surface': design.surface,
+          '--cover': `url(${images[0] ?? template.cover})`,
         } as CSSProperties
       }
     >
       <div className="phone-scroll">
-        {!previewStarted && (
-          <div className="preview-lock">
-            <strong>5분 미리보기 전</strong>
-            <span>제작 내용은 저장되고 있습니다.</span>
+        <section className="phone-hero">
+          <div className="phone-meta">
+            <span>{template.tone}</span>
+            <span>{audience.label}</span>
           </div>
-        )}
-
-        <section className="phone-cover">
-          <div className="cover-meta">
-            <span>{template.category}</span>
-            <span>{audience.label} 링크</span>
-          </div>
-          <div className="ornament-line" />
           <h2>{form.groom}<br />&amp; {form.bride}</h2>
           <p>{audience.headline}</p>
         </section>
-
-        {modules.map((module) => (
-          <PhoneModule
+        {sections.map((section) => (
+          <PhoneSection
             audience={audience}
             form={form}
-            key={module.id}
-            module={module}
-            secondsLeft={secondsLeft}
+            images={images}
+            key={section.id}
+            section={section}
           />
         ))}
+        <footer className="phone-footer">
+          <strong>{audience.link}</strong>
+          <span>Made with Issue Invite</span>
+        </footer>
       </div>
     </article>
   );
 }
 
-function PhoneModule({
+function PhoneSection({
   audience,
   form,
-  module,
-  secondsLeft,
+  images,
+  section,
 }: {
-  audience: Audience;
+  audience: { label: string; headline: string; note: string; link: string };
   form: {
     title: string;
-    groom: string;
-    bride: string;
     date: string;
     time: string;
     venue: string;
     address: string;
     greeting: string;
   };
-  module: ModuleItem;
-  secondsLeft: number;
+  images: string[];
+  section: InvitationSection;
 }) {
-  if (module.id === 'cover') {
+  if (section.id === 'hero') {
     return null;
   }
 
-  if (module.id === 'intro') {
+  if (section.id === 'intro') {
     return (
       <section className="phone-section">
-        <span>Invitation note</span>
+        <span>Invitation</span>
         <h3>{form.title}</h3>
         <p>{form.greeting}</p>
       </section>
     );
   }
 
-  if (module.id === 'gallery') {
+  if (section.id === 'gallery') {
     return (
       <section className="phone-section">
-        <span>Album</span>
-        <div className="mobile-gallery">
-          <i />
-          <i />
-          <i />
+        <span>Gallery</span>
+        <div className="phone-gallery">
+          {images.slice(0, 5).map((image) => <i key={image} style={{ backgroundImage: `url(${image})` }} />)}
         </div>
       </section>
     );
   }
 
-  if (module.id === 'calendar') {
+  if (section.id === 'schedule') {
     return (
       <section className="phone-section split">
-        <div>
-          <span>Date</span>
-          <strong>{form.date}</strong>
-          <small>{form.time}</small>
-        </div>
-        <div>
-          <span>Preview</span>
-          <strong>{formatTime(secondsLeft)}</strong>
-          <small>5분 제한</small>
-        </div>
+        <div><span>Date</span><strong>{form.date}</strong><small>{form.time}</small></div>
+        <div><span>For</span><strong>{audience.label}</strong><small>{audience.note}</small></div>
       </section>
     );
   }
 
-  if (module.id === 'map') {
+  if (section.id === 'location') {
     return (
       <section className="phone-section">
         <span>Location</span>
         <h3>{form.venue}</h3>
         <p>{form.address}</p>
-        <div className="mini-map">Map preview</div>
+        <div className="map-box">Map preview</div>
       </section>
     );
   }
 
-  if (module.id === 'gift') {
-    return (
-      <section className="phone-section">
-        <span>Gift</span>
-        <p>{audience.id === 'friends' ? '친구 링크에서는 계좌 안내를 접어둡니다.' : '혼주와 신랑 신부 계좌를 탭으로 구분해 보여줍니다.'}</p>
-      </section>
-    );
-  }
-
-  if (module.id === 'rsvp') {
+  if (section.id === 'rsvp') {
     return (
       <section className="phone-section">
         <span>RSVP</span>
@@ -777,10 +700,19 @@ function PhoneModule({
     );
   }
 
+  if (section.id === 'gift') {
+    return (
+      <section className="phone-section">
+        <span>Gift</span>
+        <p>{audience.label === '친구' ? '친구 링크에서는 계좌 안내를 접어둡니다.' : '혼주와 신랑 신부 계좌를 탭으로 구분합니다.'}</p>
+      </section>
+    );
+  }
+
   return (
     <section className="phone-section">
       <span>Guestbook</span>
-      <p>축하 메시지는 그룹별 공개 범위에 맞춰 노출됩니다.</p>
+      <p>축하 메시지는 공개 범위에 맞춰 노출됩니다.</p>
     </section>
   );
 }
