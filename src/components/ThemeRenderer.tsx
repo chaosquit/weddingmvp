@@ -37,7 +37,7 @@ export default function ThemeRenderer({ themeId, data }: ThemeRendererProps) {
   if (!ThemeComponent) {
     return (
       <div className="flex h-screen items-center justify-center bg-gray-100 text-gray-500">
-        Theme "{themeId}" not found.
+        Theme &quot;{themeId}&quot; not found.
       </div>
     );
   }

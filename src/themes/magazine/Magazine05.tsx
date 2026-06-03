@@ -14,7 +14,7 @@ export default function Magazine05({ data }: { data: InvitationData }) {
           <h1 className="text-4xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-purple-600 mb-2">
             {data.couple.groom.name} & {data.couple.bride.name}
           </h1>
-          <p className="text-sm font-medium text-gray-500 uppercase tracking-widest">You're Invited</p>
+          <p className="text-sm font-medium text-gray-500 uppercase tracking-widest">You&apos;re Invited</p>
         </header>
 
         <div className="bg-white/60 backdrop-blur-xl rounded-3xl shadow-[0_8px_32px_0_rgba(31,38,135,0.07)] border border-white/50 overflow-hidden">
