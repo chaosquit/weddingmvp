@@ -1,8 +1,10 @@
 "use client";
 
+/* eslint-disable @next/next/no-img-element */
+
 import { useRef, useState } from "react";
-import type { CSSProperties, ElementType, ReactNode } from "react";
-import type { InvitationData } from "../data/invitationData";
+import type { CSSProperties, ElementType, FocusEvent, ReactNode } from "react";
+import type { InvitationData, MediaItem } from "../data/invitationData";
 import type { Concept, Template } from "../data/templates";
 
 export const RENDER_BLOCKS = [
@@ -10,6 +12,7 @@ export const RENDER_BLOCKS = [
   "greeting",
   "datetime",
   "gallery",
+  "story",
   "venue",
   "family",
   "account",
@@ -18,6 +21,7 @@ export const RENDER_BLOCKS = [
   "notice",
   "ending",
 ] as const;
+
 export type RenderBlock = (typeof RENDER_BLOCKS)[number];
 
 export type EditKey =
@@ -32,111 +36,237 @@ export type EditKey =
   | "venue.address"
   | "ending";
 
+export interface InvitationStyle {
+  accent: string;
+  paper: string;
+  ink: string;
+  fontPair: "serif" | "classic" | "modern";
+  heroAlign: "top" | "center" | "bottom";
+  radius: number;
+  motion: "calm" | "float" | "none";
+  coverEffect: "cinematic" | "kenburns" | "handheld" | "shutter" | "still";
+  galleryLayout: "masonry" | "editorial" | "filmstrip" | "journey";
+}
+
 interface Props {
   template: Template;
   data: InvitationData;
   enabledBlocks: string[];
+  styleConfig?: InvitationStyle;
   activeBlock?: string | null;
   editable?: boolean;
   onSelectBlock?: (id: RenderBlock) => void;
   onEdit?: (key: EditKey, value: string) => void;
 }
 
+interface EditableTextProps {
+  k: EditKey;
+  value: string;
+  editable: boolean;
+  onEdit?: (key: EditKey, value: string) => void;
+  tag?: "span" | "h2" | "p" | "b";
+  className?: string;
+  multiline?: boolean;
+}
+
+const WEEKDAYS = ["일", "월", "화", "수", "목", "금", "토"];
+
 function buildCalendar(date: Date) {
-  const y = date.getFullYear();
-  const m = date.getMonth();
-  const first = new Date(y, m, 1).getDay();
-  const days = new Date(y, m + 1, 0).getDate();
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
   const cells: (number | null)[] = [];
-  for (let i = 0; i < first; i += 1) cells.push(null);
-  for (let d = 1; d <= days; d += 1) cells.push(d);
+
+  for (let i = 0; i < firstDay; i += 1) cells.push(null);
+  for (let day = 1; day <= daysInMonth; day += 1) cells.push(day);
   while (cells.length % 7 !== 0) cells.push(null);
+
   return cells;
+}
+
+function toCalendarStamp(date: Date) {
+  return date.toISOString().replace(/[-:]/g, "").replace(/\.\d{3}Z$/, "Z");
+}
+
+function formatShortDate(date: Date) {
+  return `${date.getFullYear()}.${String(date.getMonth() + 1).padStart(2, "0")}.${String(
+    date.getDate(),
+  ).padStart(2, "0")}`;
+}
+
+function getDday(date: Date) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+
+  const diff = Math.ceil((target.getTime() - today.getTime()) / 86_400_000);
+  if (diff === 0) return "D-Day";
+  if (diff > 0) return `D-${diff}`;
+  return `D+${Math.abs(diff)}`;
+}
+
+function mediaFromTemplate(template: Template): MediaItem {
+  if (template.coverVideo) {
+    return {
+      id: "template-cover-video",
+      type: "video",
+      src: template.coverVideo,
+      alt: `${template.name} motion cover`,
+      effect: "still",
+    };
+  }
+
+  return {
+    id: "template-cover",
+    type: "image",
+    src: template.coverPhoto,
+    alt: "대표 웨딩 사진",
+    focusX: 50,
+    focusY: 50,
+    scale: 1,
+    rotate: 0,
+    effect: "cinematic",
+  };
+}
+
+function MediaView({
+  media,
+  className,
+  fit = "cover",
+}: {
+  media: MediaItem;
+  className?: string;
+  fit?: "cover" | "contain";
+}) {
+  const mediaFit = media.fit ?? fit;
+  const mediaStyle = {
+    "--media-x": `${media.focusX ?? 50}%`,
+    "--media-y": `${media.focusY ?? 50}%`,
+    "--media-scale": media.scale ?? 1,
+    "--media-rotate": `${media.rotate ?? 0}deg`,
+    objectFit: mediaFit,
+    objectPosition: `${media.focusX ?? 50}% ${media.focusY ?? 50}%`,
+  } as CSSProperties;
+  const effect = media.type === "video" ? "still" : (media.effect ?? "cinematic");
+  const mediaClass = `cv-media cv-media--${media.type} media-fx--${effect} ${className ?? ""}`.trim();
+
+  if (media.type === "video") {
+    return (
+      <video
+        className={mediaClass}
+        src={media.src}
+        autoPlay
+        muted
+        loop
+        playsInline
+        controls={fit === "contain"}
+        style={mediaStyle}
+      />
+    );
+  }
+
+  return <img className={mediaClass} src={media.src} alt={media.alt} style={mediaStyle} />;
+}
+
+function EditableText({
+  k,
+  value,
+  editable,
+  onEdit,
+  tag = "span",
+  className,
+  multiline = false,
+}: EditableTextProps) {
+  const Tag = tag as ElementType;
+  if (!editable) return <Tag className={className}>{value}</Tag>;
+
+  return (
+    <Tag
+      className={`${className ?? ""} cv-edit`.trim()}
+      contentEditable
+      suppressContentEditableWarning
+      onClick={(event: { stopPropagation: () => void }) => event.stopPropagation()}
+      onBlur={(event: FocusEvent<HTMLElement>) =>
+        onEdit?.(k, multiline ? event.currentTarget.innerText : event.currentTarget.textContent ?? "")
+      }
+    >
+      {value}
+    </Tag>
+  );
 }
 
 export default function InvitationRenderer({
   template,
   data,
   enabledBlocks,
+  styleConfig,
   activeBlock,
   editable = false,
   onSelectBlock,
   onEdit,
 }: Props) {
   const rootRef = useRef<HTMLDivElement>(null);
-  const [zoom, setZoom] = useState<string | null>(null);
+  const [zoom, setZoom] = useState<MediaItem | null>(null);
   const [toast, setToast] = useState<string | null>(null);
 
-  const has = (id: RenderBlock) => enabledBlocks.includes(id);
   const date = new Date(data.date);
-  const y = date.getFullYear();
-  const m = date.getMonth() + 1;
-  const d = date.getDate();
-  const dateShort = `${y}.${String(m).padStart(2, "0")}.${String(d).padStart(2, "0")}`;
-  const timeText = data.dateLabel.includes("오")
-    ? "오" + data.dateLabel.split(" 오")[1]
-    : "";
+  const dateShort = formatShortDate(date);
+  const baseCoverMedia = data.cover.media ?? mediaFromTemplate(template);
+  const coverMedia =
+    baseCoverMedia.type === "image"
+      ? { ...baseCoverMedia, effect: baseCoverMedia.effect ?? styleConfig?.coverEffect ?? "cinematic" }
+      : baseCoverMedia;
+  const gallery = data.gallery.length > 0 ? data.gallery : [coverMedia];
+  const heroMedia = [coverMedia, ...gallery].slice(0, 5);
+  const has = (id: RenderBlock) => enabledBlocks.includes(id);
 
-  const ping = (msg: string) => {
-    setToast(msg);
-    window.clearTimeout((ping as unknown as { _t?: number })._t);
-    (ping as unknown as { _t?: number })._t = window.setTimeout(
-      () => setToast(null),
-      1600,
-    );
+  const style = {
+    "--cv-accent": styleConfig?.accent ?? template.accent,
+    "--cv-paper": styleConfig?.paper ?? template.paper,
+    "--cv-ink": styleConfig?.ink ?? template.ink,
+    "--cv-radius": `${styleConfig?.radius ?? 22}px`,
+    "--cv-hero-pos":
+      styleConfig?.heroAlign === "top"
+        ? "50% 18%"
+        : styleConfig?.heroAlign === "bottom"
+          ? "50% 82%"
+          : "50% 50%",
+  } as CSSProperties;
+
+  const calendarUrl = () => {
+    const start = new Date(date);
+    const end = new Date(start.getTime() + 90 * 60 * 1000);
+    const text = encodeURIComponent(`${data.cover.groom} & ${data.cover.bride} 결혼식`);
+    const details = encodeURIComponent(`${data.dateLabel}\n${data.venue.name} ${data.venue.hall}`);
+    const location = encodeURIComponent(`${data.venue.name}, ${data.venue.address}`);
+
+    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${toCalendarStamp(
+      start,
+    )}/${toCalendarStamp(end)}&details=${details}&location=${location}`;
   };
+
   const copy = (text: string) => {
     navigator.clipboard?.writeText(text);
-    ping("복사되었습니다");
-  };
-  const calendarUrl = () => {
-    const pad = (n: number) => String(n).padStart(2, "0");
-    const s = `${y}${pad(m)}${pad(d)}T033000Z`;
-    const e = `${y}${pad(m)}${pad(d)}T060000Z`;
-    const text = encodeURIComponent(`${data.cover.groom} & ${data.cover.bride} 결혼식`);
-    const det = encodeURIComponent(`${data.dateLabel}\n${data.venue.name} ${data.venue.hall}`);
-    const loc = encodeURIComponent(`${data.venue.name}, ${data.venue.address}`);
-    return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${text}&dates=${s}/${e}&details=${det}&location=${loc}`;
-  };
-  const scrollTo = (id: string) =>
-    rootRef.current?.querySelector(`#${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" });
-
-  // inline-editable node (used in the shared body)
-  const E = ({
-    k,
-    value,
-    tag = "span",
-    className,
-    multiline = false,
-  }: {
-    k: EditKey;
-    value: string;
-    tag?: "span" | "h2" | "p" | "b";
-    className?: string;
-    multiline?: boolean;
-  }) => {
-    const Tag = tag as ElementType;
-    if (!editable) return <Tag className={className}>{value}</Tag>;
-    return (
-      <Tag
-        className={`${className ?? ""} cv-edit`.trim()}
-        contentEditable
-        suppressContentEditableWarning
-        onClick={(e: { stopPropagation: () => void }) => e.stopPropagation()}
-        onBlur={(e: { currentTarget: HTMLElement }) =>
-          onEdit?.(k, multiline ? e.currentTarget.innerText : e.currentTarget.textContent ?? "")
-        }
-      >
-        {value}
-      </Tag>
-    );
+    window.clearTimeout((copy as unknown as { timer?: number }).timer);
+    setToast("복사했어요");
+    (copy as unknown as { timer?: number }).timer = window.setTimeout(() => setToast(null), 1500);
   };
 
-  const sec = (key: RenderBlock, cls: string, children: ReactNode) => (
+  const scrollTo = (id: string) => {
+    rootRef.current?.querySelector(`#${id}`)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const sec = (key: RenderBlock, className: string, children: ReactNode) => (
     <section
       id={`sec-${key}`}
       data-block={key}
-      className={`section ${cls} ${activeBlock === key ? "is-active" : ""} ${
+      className={`section ${className} ${activeBlock === key ? "is-active" : ""} ${
         editable ? "is-edit" : ""
       }`.trim()}
       onClick={editable ? () => onSelectBlock?.(key) : undefined}
@@ -145,23 +275,37 @@ export default function InvitationRenderer({
     </section>
   );
 
-  const Eyebrow = ({ children }: { children: ReactNode }) => (
-    <span className="eyebrow">{children}</span>
-  );
-
-  const gallery = data.gallery;
-  const heroPhotos = [template.coverPhoto, ...gallery];
+  const mapUrl = `https://map.naver.com/p/search/${encodeURIComponent(data.venue.address)}`;
 
   return (
-    <div className={`cv cv--${template.concept}`} ref={rootRef}>
-      <nav className="cv-nav">
-        <button type="button" onClick={() => scrollTo("sec-greeting")}>Invite</button>
-        <button type="button" onClick={() => scrollTo("sec-gallery")}>Photos</button>
-        <button type="button" onClick={() => scrollTo("sec-venue")}>Map</button>
-        <button type="button" onClick={() => scrollTo("sec-rsvp")}>RSVP</button>
+    <div
+      className={`cv cv--${template.concept} cv-font--${styleConfig?.fontPair ?? "serif"} cv-motion--${
+        styleConfig?.motion ?? "calm"
+      }`}
+      ref={rootRef}
+      style={style}
+    >
+      <nav className="cv-nav" aria-label="청첩장 섹션">
+        <button type="button" onClick={() => scrollTo("sec-greeting")}>
+          초대
+        </button>
+        <button type="button" onClick={() => scrollTo("sec-datetime")}>
+          일정
+        </button>
+        <button type="button" onClick={() => scrollTo("sec-gallery")}>
+          사진
+        </button>
+        <button type="button" onClick={() => scrollTo("sec-story")}>
+          스토리
+        </button>
+        <button type="button" onClick={() => scrollTo("sec-venue")}>
+          장소
+        </button>
+        <button type="button" onClick={() => scrollTo("sec-rsvp")}>
+          RSVP
+        </button>
       </nav>
 
-      {/* ───────── HERO (bespoke per concept) ───────── */}
       <header
         id="sec-cover"
         data-block="cover"
@@ -173,21 +317,28 @@ export default function InvitationRenderer({
         <Hero
           concept={template.concept}
           data={data}
-          cover={template.coverPhoto}
-          photos={heroPhotos}
+          cover={coverMedia}
+          photos={heroMedia}
           dateShort={dateShort}
         />
       </header>
 
-      {/* ───────── SHARED THEMED BODY ───────── */}
       {has("greeting") &&
         sec(
           "greeting",
           "sec-greeting",
           <>
-            <Eyebrow>Invitation</Eyebrow>
-            <E k="greeting.title" value={data.greeting.title} tag="h2" />
-            <E k="greeting.content" value={data.greeting.content} tag="p" className="cv-greet" multiline />
+            <span className="eyebrow">Invitation</span>
+            <EditableText k="greeting.title" value={data.greeting.title} tag="h2" editable={editable} onEdit={onEdit} />
+            <EditableText
+              k="greeting.content"
+              value={data.greeting.content}
+              tag="p"
+              className="cv-greet"
+              multiline
+              editable={editable}
+              onEdit={onEdit}
+            />
             <div className="cv-parents">
               <p>
                 {data.couple.groom.father} · {data.couple.groom.mother}
@@ -208,31 +359,34 @@ export default function InvitationRenderer({
           "datetime",
           "sec-date",
           <>
-            <Eyebrow>Save the date</Eyebrow>
-            <E k="dateLabel" value={data.dateLabel} tag="h2" />
-            <div className="cv-cal">
+            <span className="eyebrow">Save the date</span>
+            <EditableText k="dateLabel" value={data.dateLabel} tag="h2" editable={editable} onEdit={onEdit} />
+            <div className="cv-cal" aria-label="예식 날짜 달력">
               <div className="cv-cal__head">
-                {["일", "월", "화", "수", "목", "금", "토"].map((w) => (
-                  <span key={w}>{w}</span>
+                {WEEKDAYS.map((weekday) => (
+                  <span key={weekday}>{weekday}</span>
                 ))}
               </div>
               <div className="cv-cal__grid">
-                {buildCalendar(date).map((c, i) => (
-                  <span key={i} className={c === d ? "is-day" : ""}>
-                    {c ?? ""}
+                {buildCalendar(date).map((cell, index) => (
+                  <span key={`${cell ?? "blank"}-${index}`} className={cell === date.getDate() ? "is-day" : ""}>
+                    {cell ?? ""}
                   </span>
                 ))}
               </div>
             </div>
             <p className="cv-dday">
-              {data.cover.groom} ♥ {data.cover.bride} · 결혼식까지{" "}
-              <b>
-                D-
-                {Math.max(0, Math.round((date.getTime() - new Date("2026-06-03").getTime()) / 86_400_000))}
-              </b>
+              {data.cover.groom} · {data.cover.bride}의 결혼식까지 <b>{getDday(date)}</b>
             </p>
-            <button type="button" className="btn light full" onClick={() => window.open(calendarUrl(), "_blank")}>
-              구글 캘린더에 저장
+            <button
+              type="button"
+              className="btn light full"
+              onClick={(event) => {
+                event.stopPropagation();
+                window.open(calendarUrl(), "_blank", "noopener,noreferrer");
+              }}
+            >
+              Google 캘린더에 저장
             </button>
           </>,
         )}
@@ -242,20 +396,52 @@ export default function InvitationRenderer({
           "gallery",
           "sec-gallery",
           <>
-            <Eyebrow>Gallery</Eyebrow>
-            <h2>우리의 순간</h2>
-            <div className="cv-gallery">
-              {gallery.map((src, i) => (
+            <span className="eyebrow">Gallery</span>
+            <h2>우리의 장면</h2>
+            <div className={`cv-gallery cv-gallery--${styleConfig?.galleryLayout ?? "masonry"}`}>
+              {gallery.map((media, index) => (
                 <button
-                  key={src + i}
+                  key={`${media.id}-${index}`}
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setZoom(src);
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setZoom(media);
                   }}
-                  style={{ backgroundImage: `url(${src})` }}
-                />
+                >
+                  <MediaView media={media} />
+                  {media.type === "video" && <span className="media-pill">Video</span>}
+                  {media.caption && <span className="media-caption">{media.caption}</span>}
+                </button>
               ))}
+            </div>
+          </>,
+        )}
+
+      {has("story") &&
+        sec(
+          "story",
+          "sec-story",
+          <>
+            <span className="eyebrow">Journey</span>
+            <h2>스크롤로 이어지는 우리의 장면</h2>
+            <div className="cv-journey">
+              {data.timeline.map((item, index) => {
+                const media = gallery.find((entry) => entry.id === item.mediaId) ?? gallery[index % gallery.length] ?? coverMedia;
+
+                return (
+                  <article className="journey-card" key={`${item.date}-${item.title}`}>
+                    <div className="journey-card__media">
+                      <MediaView media={media} />
+                    </div>
+                    <div className="journey-card__copy">
+                      <span>{String(index + 1).padStart(2, "0")}</span>
+                      <small>{item.date}</small>
+                      <h3>{item.title}</h3>
+                      <p>{item.body}</p>
+                    </div>
+                  </article>
+                );
+              })}
             </div>
           </>,
         )}
@@ -265,16 +451,16 @@ export default function InvitationRenderer({
           "venue",
           "sec-venue",
           <>
-            <Eyebrow>Location</Eyebrow>
-            <E k="venue.name" value={data.venue.name} tag="h2" />
+            <span className="eyebrow">Location</span>
+            <EditableText k="venue.name" value={data.venue.name} tag="h2" editable={editable} onEdit={onEdit} />
             <div className="info">
               <div className="row">
                 <b>홀</b>
-                <E k="venue.hall" value={data.venue.hall} tag="span" />
+                <EditableText k="venue.hall" value={data.venue.hall} tag="span" editable={editable} onEdit={onEdit} />
               </div>
               <div className="row">
                 <b>주소</b>
-                <E k="venue.address" value={data.venue.address} tag="span" />
+                <EditableText k="venue.address" value={data.venue.address} tag="span" editable={editable} onEdit={onEdit} />
               </div>
               {data.venue.transport.subway && (
                 <div className="row">
@@ -295,16 +481,28 @@ export default function InvitationRenderer({
                 </div>
               )}
             </div>
-            <button
-              type="button"
-              className="btn light full"
-              onClick={(e) => {
-                e.stopPropagation();
-                copy(data.venue.address);
-              }}
-            >
-              주소 복사
-            </button>
+            <div className="btn-row">
+              <button
+                type="button"
+                className="btn light"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  copy(data.venue.address);
+                }}
+              >
+                주소 복사
+              </button>
+              <button
+                type="button"
+                className="btn"
+                onClick={(event) => {
+                  event.stopPropagation();
+                  window.open(mapUrl, "_blank", "noopener,noreferrer");
+                }}
+              >
+                지도 열기
+              </button>
+            </div>
           </>,
         )}
 
@@ -313,15 +511,15 @@ export default function InvitationRenderer({
           "family",
           "sec-family",
           <>
-            <Eyebrow>Contact</Eyebrow>
+            <span className="eyebrow">Contact</span>
             <h2>연락하기</h2>
             <div className="cv-contact">
-              {[data.couple.groom, data.couple.bride].map((p, i) => (
-                <article key={p.name}>
-                  <small>{i === 0 ? "신랑" : "신부"}</small>
-                  <b>{p.name}</b>
-                  <a href={`tel:${p.phone}`} onClick={(e) => e.stopPropagation()}>
-                    📞 {p.phone}
+              {[data.couple.groom, data.couple.bride].map((person, index) => (
+                <article key={person.name}>
+                  <small>{index === 0 ? "신랑" : "신부"}</small>
+                  <b>{person.name}</b>
+                  <a href={`tel:${person.phone}`} onClick={(event) => event.stopPropagation()}>
+                    {person.phone}
                   </a>
                 </article>
               ))}
@@ -334,18 +532,18 @@ export default function InvitationRenderer({
           "account",
           "sec-account",
           <>
-            <Eyebrow>Gift</Eyebrow>
+            <span className="eyebrow">Gift</span>
             <h2>마음 전하실 곳</h2>
-            {[data.couple.groom, data.couple.bride].map((p, i) => (
-              <div className="copy" key={p.name}>
+            {[data.couple.groom, data.couple.bride].map((person, index) => (
+              <div className="copy" key={person.name}>
                 <code>
-                  {i === 0 ? "신랑" : "신부"} · {p.bank} {p.account}
+                  {index === 0 ? "신랑" : "신부"} · {person.bank} {person.account}
                 </code>
                 <button
                   type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    copy(`${p.bank} ${p.account}`);
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    copy(`${person.bank} ${person.account}`);
                   }}
                 >
                   복사
@@ -360,26 +558,27 @@ export default function InvitationRenderer({
           "rsvp",
           "sec-rsvp",
           <>
-            <Eyebrow>Reply</Eyebrow>
+            <span className="eyebrow">Reply</span>
             <h2>참석 의사 전달</h2>
             <form
               className="form"
-              onClick={(e) => e.stopPropagation()}
-              onSubmit={(e) => {
-                e.preventDefault();
-                (e.currentTarget as HTMLFormElement).reset();
-                ping("참석 의사가 전달되었습니다");
+              onClick={(event) => event.stopPropagation()}
+              onSubmit={(event) => {
+                event.preventDefault();
+                event.currentTarget.reset();
+                setToast("참석 의사를 전달했어요");
+                window.setTimeout(() => setToast(null), 1500);
               }}
             >
-              <input placeholder="성함" />
-              <select>
+              <input placeholder="성함" required />
+              <select defaultValue="참석합니다">
                 <option>참석합니다</option>
                 <option>참석이 어렵습니다</option>
                 <option>아직 미정입니다</option>
               </select>
               <textarea rows={3} placeholder="축하 메시지" />
               <button className="btn full" type="submit">
-                회신하기
+                전달하기
               </button>
             </form>
           </>,
@@ -390,16 +589,16 @@ export default function InvitationRenderer({
           "guestbook",
           "sec-guestbook",
           <>
-            <Eyebrow>Guestbook</Eyebrow>
+            <span className="eyebrow">Guestbook</span>
             <h2>축하 메시지</h2>
             <div className="cv-book">
               <article>
-                <b>지윤</b>
-                <p>두 사람의 시작을 진심으로 축하해! 늘 지금처럼 따뜻하길.</p>
+                <b>지우</b>
+                <p>두 사람의 새로운 계절을 진심으로 축하해. 지금처럼 서로의 편이 되어줘.</p>
               </article>
               <article>
                 <b>민호</b>
-                <p>드디어! 행복하게 잘 살자 친구야 🤍</p>
+                <p>초대장 너무 예쁘다. 결혼식 날 가장 먼저 축하하러 갈게.</p>
               </article>
             </div>
           </>,
@@ -410,11 +609,11 @@ export default function InvitationRenderer({
           "notice",
           "sec-notice",
           <>
-            <Eyebrow>Notice</Eyebrow>
+            <span className="eyebrow">Notice</span>
             <h2>안내 말씀</h2>
             <ul className="cv-notice">
-              {data.notice.map((n) => (
-                <li key={n}>{n}</li>
+              {data.notice.map((notice) => (
+                <li key={notice}>{notice}</li>
               ))}
             </ul>
           </>,
@@ -425,16 +624,16 @@ export default function InvitationRenderer({
           "ending",
           "sec-ending",
           <div className="cv-end">
-            <E k="ending" value={data.ending} tag="p" multiline />
+            <EditableText k="ending" value={data.ending} tag="p" multiline editable={editable} onEdit={onEdit} />
             <b>
-              {data.cover.groom} &amp; {data.cover.bride}
+              {data.cover.groom} & {data.cover.bride}
             </b>
             <div className="cv-end__btns">
               <button
                 type="button"
                 className="btn full"
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={(event) => {
+                  event.stopPropagation();
                   copy("issue.cards/doyun-seoyeon");
                 }}
               >
@@ -443,9 +642,9 @@ export default function InvitationRenderer({
               <button
                 type="button"
                 className="btn light full"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  window.open(calendarUrl(), "_blank");
+                onClick={(event) => {
+                  event.stopPropagation();
+                  window.open(calendarUrl(), "_blank", "noopener,noreferrer");
                 }}
               >
                 캘린더 저장
@@ -458,7 +657,9 @@ export default function InvitationRenderer({
 
       {zoom && (
         <div className="cv-zoom" onClick={() => setZoom(null)}>
-          <img src={zoom} alt="" />
+          <div className="cv-zoom__inner">
+            <MediaView media={zoom} fit="contain" />
+          </div>
         </div>
       )}
       {toast && <div className="cv-toast">{toast}</div>}
@@ -466,7 +667,6 @@ export default function InvitationRenderer({
   );
 }
 
-/* ════════════════════════════ BESPOKE HEROES ════════════════════════════ */
 function Hero({
   concept,
   data,
@@ -476,100 +676,212 @@ function Hero({
 }: {
   concept: Concept;
   data: InvitationData;
-  cover: string;
-  photos: string[];
+  cover: MediaItem;
+  photos: MediaItem[];
   dateShort: string;
 }) {
-  const g = data.cover.groom;
-  const b = data.cover.bride;
+  const groom = data.cover.groom;
+  const bride = data.cover.bride;
   const venue = data.venue.name;
-  const img = (src: string, alt = "") => (
-    <img src={src} alt={alt} style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-  );
 
   switch (concept) {
+    case "lumiere":
+      return (
+        <div className="hero-lumiere">
+          <div className="hero-kicker">{data.cover.kicker}</div>
+          <div className="lumiere-frame">
+            <MediaView media={cover} />
+          </div>
+          <h1>
+            {groom}
+            <span>&</span>
+            {bride}
+          </h1>
+          <p>{data.cover.title}</p>
+          <div className="hero-meta">
+            <span>{dateShort}</span>
+            <span>{venue}</span>
+          </div>
+        </div>
+      );
+
+    case "serene":
+      return (
+        <div className="hero-serene">
+          <div className="serene-photo">
+            <MediaView media={cover} />
+          </div>
+          <div className="serene-copy">
+            <span>{data.cover.kicker}</span>
+            <h1>
+              {groom}
+              <br />
+              {bride}
+            </h1>
+            <p>{dateShort}</p>
+          </div>
+        </div>
+      );
+
+    case "botanica":
+      return (
+        <div className="hero-botanica">
+          <div className="botanica-line" />
+          <div className="botanica-photo">
+            <MediaView media={cover} />
+          </div>
+          <div className="botanica-copy">
+            <span>Blooming together</span>
+            <h1>
+              {groom}
+              <br />
+              <em>and</em>
+              <br />
+              {bride}
+            </h1>
+            <p>
+              {dateShort}
+              <br />
+              {venue}
+            </p>
+          </div>
+        </div>
+      );
+
+    case "atelier":
+      return (
+        <div className="hero-atelier">
+          <div className="atelier-note">
+            <span>{data.cover.kicker}</span>
+            <h1>{data.cover.title}</h1>
+            <p>
+              {groom} and {bride}
+              <br />
+              {dateShort}
+            </p>
+          </div>
+          <div className="atelier-photo">
+            <MediaView media={cover} />
+          </div>
+        </div>
+      );
+
+    case "nocturne":
+      return (
+        <div className="hero-nocturne">
+          <MediaView media={cover} className="nocturne-bg" />
+          <div className="nocturne-shade" />
+          <div className="nocturne-copy">
+            <span>{dateShort}</span>
+            <h1>
+              {groom}
+              <br />
+              & {bride}
+            </h1>
+            <p>{venue}</p>
+          </div>
+        </div>
+      );
+
+    case "vellum":
+      return (
+        <div className="hero-vellum">
+          <div className="vellum-stack">
+            {photos.slice(0, 3).map((media, index) => (
+              <div className={`vellum-photo vellum-photo--${index + 1}`} key={`${media.id}-${index}`}>
+                <MediaView media={media} />
+              </div>
+            ))}
+          </div>
+          <div className="vellum-card">
+            <span>{data.cover.kicker}</span>
+            <h1>
+              {groom}
+              <br />& {bride}
+            </h1>
+            <p>{dateShort}</p>
+          </div>
+        </div>
+      );
+
     case "newspaper":
       return (
-        <div className="news-hero">
-          <div className="np-top">
-            <div className="np-kicker">Wedding Invitation — Special Edition</div>
+        <div className="hero-newspaper">
+          <div className="news-mast">
+            <span>Wedding Special Edition</span>
             <h1>
-              {g} &amp; {b}
-              <br />결혼합니다
+              {groom}
+              <br />& {bride}
             </h1>
-            <div className="np-strip">
-              <span>Exclusive Photos</span>
-              <span>Ceremony Details</span>
-              <span>Love Story</span>
-            </div>
+            <p>{data.cover.title}</p>
           </div>
-          <div className="scrap-photo tape">
-            {img(cover)}
-            <div className="date-tag">{dateShort}</div>
+          <div className="news-photo">
+            <MediaView media={cover} />
+            <b>{dateShort}</b>
           </div>
-          <div className="np-title2">The Wedding of the Year</div>
-          <span className="stamp">Approved</span>
+          <div className="news-foot">
+            <span>Exclusive invitation</span>
+            <span>{venue}</span>
+          </div>
         </div>
       );
 
     case "mosaic":
       return (
-        <div className="mo-hero">
-          <div className="mo-head">
-            <span>Wedding Pieces</span>
+        <div className="hero-mosaic">
+          <div className="mosaic-head">
+            <span>Pieces of our day</span>
             <span>{dateShort}</span>
           </div>
           <h1>
-            Pieces of
-            <br />Our Day
+            Our
+            <br />
+            Mosaic
           </h1>
-          <div className="mo-grid">
-            <div className="mo-tile mo1">
-              {img(cover)}
-              <div className="mo-name">
-                {g}
-                <br />
-                {b}
-              </div>
+          <div className="mosaic-grid">
+            {[cover, photos[1] ?? cover, photos[2] ?? cover, photos[3] ?? cover, photos[4] ?? cover].map(
+              (media, index) => (
+                <div className={`mosaic-cell mosaic-cell--${index + 1}`} key={`${media.id}-${index}`}>
+                  <MediaView media={media} />
+                </div>
+              ),
+            )}
+            <div className="mosaic-type">
+              {groom}
+              <br />& {bride}
             </div>
-            <div className="mo-tile mo2">{img(photos[1])}</div>
-            <div className="mo-tile mo3">서로 다른 조각이 모여 하나의 장면이 되었습니다.</div>
-            <div className="mo-tile mo4">{img(photos[2])}</div>
-            <div className="mo-tile mo5">{img(photos[3])}</div>
-            <div className="mo-tile mo6">{img(photos[4])}</div>
-            <div className="mo-tile mo7">&amp;</div>
           </div>
         </div>
       );
 
     case "comic":
       return (
-        <div className="co-hero">
-          <div className="co-top">
+        <div className="hero-comic">
+          <div className="comic-top">
             <span>EP.01</span>
             <span>WEDDING DAY</span>
           </div>
           <h1>
             Our
-            <br />Next
-            <br />Cut!
+            <br />
+            Next
+            <br />
+            Cut
           </h1>
-          <div className="panels">
-            <div className="panel wide">
-              {img(cover)}
-              <div className="bubble b1">드디어<br />결혼해요!</div>
+          <div className="comic-panels">
+            <div className="comic-panel comic-panel--wide">
+              <MediaView media={cover} />
+              <span className="speech speech--left">초대합니다</span>
             </div>
-            <div className="panel">
-              {img(photos[1])}
-              <div className="sfx">LOVE!</div>
+            <div className="comic-panel">
+              <MediaView media={photos[1] ?? cover} />
             </div>
-            <div className="panel">
-              {img(photos[2])}
-              <div className="bubble b2">같이<br />와줘요</div>
+            <div className="comic-panel">
+              <MediaView media={photos[2] ?? cover} />
+              <span className="speech speech--right">같이 와요</span>
             </div>
-            <div className="panel wide">{img(photos[3])}</div>
           </div>
-          <div className="co-date">
+          <div className="comic-date">
             <span>{dateShort}</span>
             <span>{venue}</span>
           </div>
@@ -578,54 +890,57 @@ function Hero({
 
     case "vogue":
       return (
-        <div className="vo-hero">
-          <div className="vo-top">
-            <div className="logo">Vows</div>
-            <div className="cover-meta">
+        <div className="hero-vogue">
+          <div className="vogue-top">
+            <strong>Vows</strong>
+            <span>
               {dateShort}
-              <br />Seoul Wedding
-              <br />No.001
-            </div>
+              <br />
+              Wedding Issue
+            </span>
           </div>
-          <div className="cover-photo">{img(cover)}</div>
-          <div className="coverline cl1">
+          <div className="vogue-photo">
+            <MediaView media={cover} />
+          </div>
+          <div className="vogue-line vogue-line--left">
             <small>cover story</small>
             Two people, one quiet promise.
           </div>
-          <div className="coverline cl2">
-            <small>invitation</small>
-            Romantic but never ordinary.
+          <div className="vogue-line vogue-line--right">
+            <small>special</small>
+            Modern wedding invitation.
           </div>
-          <div className="cover-names">
+          <div className="vogue-names">
             <h1>
-              {g}
-              <br />&amp; {b}
+              {groom}
+              <br />& {bride}
             </h1>
-            <p>
-              <span>{dateShort}</span>
-              <span>{venue}</span>
-            </p>
+            <p>{venue}</p>
           </div>
         </div>
       );
 
     case "film":
       return (
-        <div className="fi-hero">
+        <div className="hero-film">
           <div className="film-meta">
             <span>ROLL 06 / FRAME 15</span>
-            <span>WEDDING FILM</span>
+            <span>{dateShort}</span>
           </div>
           <h1>
-            One <span>fine</span> Day
+            One
+            <br />
+            <em>fine</em> Day
           </h1>
-          <div className="strip">
-            <div className="frame">{img(cover)}</div>
-            <div className="frame">{img(photos[1])}</div>
-            <div className="frame">{img(photos[2])}</div>
+          <div className="film-strip">
+            {[cover, photos[1] ?? cover, photos[2] ?? cover].map((media, index) => (
+              <div className="film-frame" key={`${media.id}-${index}`}>
+                <MediaView media={media} />
+              </div>
+            ))}
           </div>
           <div className="film-meta">
-            <span>{dateShort}</span>
+            <span>{groom} & {bride}</span>
             <span>{venue}</span>
           </div>
         </div>
@@ -633,53 +948,52 @@ function Hero({
 
     case "museum":
       return (
-        <div className="mu-hero">
-          <div className="mu-top">
+        <div className="hero-museum">
+          <div className="museum-top">
             <span>Permanent Collection</span>
             <span>Gallery 06</span>
           </div>
-          <div className="mu-title">
-            <small>an exhibition of two hearts</small>
+          <div className="museum-title">
+            <small>An exhibition of two hearts</small>
             <h1>
               The Art
-              <br />of Us
+              <br />
+              of Us
             </h1>
           </div>
-          <div className="mu-frame">{img(cover)}</div>
-          <div className="mu-label">
-            <div>
-              <b>
-                {g} &amp; {b}, {dateShort.slice(0, 4)}
-              </b>{" "}
-              기억과 약속, 그리고 가족의 축복.
-            </div>
-            <span>{venue}</span>
+          <div className="museum-frame">
+            <MediaView media={cover} />
+          </div>
+          <div className="museum-label">
+            <b>{groom} & {bride}</b>
+            <span>{dateShort}</span>
           </div>
         </div>
       );
 
     case "boarding":
       return (
-        <div className="bo-hero">
-          <div className="ticket">
-            <div className="ticket-img">
-              {img(cover)}
-              <span className="ticket-stamp">WEDDING BOARDING PASS</span>
+        <div className="hero-boarding">
+          <div className="boarding-ticket">
+            <div className="boarding-photo">
+              <MediaView media={cover} />
+              <span>Wedding Boarding Pass</span>
             </div>
-            <div className="ticket-body">
+            <div className="boarding-body">
               <h1>
                 To Our
-                <br />Wedding
+                <br />
+                Wedding
               </h1>
-              <div className="ticket-rows">
-                <div className="t-cell"><small>from</small><b>{g}</b></div>
-                <div className="t-cell"><small>to</small><b>{b}</b></div>
-                <div className="t-cell"><small>gate</small><b>{data.venue.hall.replace(/[^0-9F]/g, "") || "3F"}</b></div>
-                <div className="t-cell"><small>date</small><b>{dateShort.slice(5)}</b></div>
-                <div className="t-cell"><small>time</small><b>{(data.dateLabel.match(/\d+시( \d+분)?/) || ["12:30"])[0]}</b></div>
-                <div className="t-cell"><small>seat</small><b>With Us</b></div>
+              <div className="boarding-cells">
+                <div><small>from</small><b>{groom}</b></div>
+                <div><small>to</small><b>{bride}</b></div>
+                <div><small>gate</small><b>{data.venue.hall.replace(/[^0-9F]/g, "") || "3F"}</b></div>
+                <div><small>date</small><b>{dateShort.slice(5)}</b></div>
+                <div><small>seat</small><b>With us</b></div>
+                <div><small>city</small><b>Seoul</b></div>
               </div>
-              <div className="barcode" />
+              <div className="boarding-barcode" />
             </div>
           </div>
         </div>
@@ -687,21 +1001,21 @@ function Hero({
 
     case "letter":
       return (
-        <div className="le-hero">
-          <div className="letter-mark">
-            {g.slice(0, 1)}
+        <div className="hero-letter">
+          <div className="letter-seal">
+            {groom.slice(0, 1)}
             <br />
-            {b.slice(0, 1)}
+            {bride.slice(0, 1)}
           </div>
-          <div className="letter-center">
-            <div className="letter-photo">{img(cover)}</div>
-            <div className="letter-script">with love and gratitude</div>
-            <h1>
-              {g}
-              <br />&amp; {b}
-            </h1>
+          <div className="letter-photo">
+            <MediaView media={cover} />
           </div>
-          <div className="letter-foot">
+          <span>with love and gratitude</span>
+          <h1>
+            {groom}
+            <br />& {bride}
+          </h1>
+          <div className="letter-bottom">
             <span>{dateShort}</span>
             <span>{venue}</span>
           </div>
@@ -710,26 +1024,24 @@ function Hero({
 
     case "archive":
       return (
-        <div className="ar-hero">
-          <div className="osbar">
+        <div className="hero-archive">
+          <div className="archive-bar">
             <span>our_wedding.zip</span>
             <span>{dateShort}</span>
           </div>
-          <div className="tabs">
-            <div className="tab">HOME</div>
-            <div className="tab">GALLERY</div>
-            <div className="tab">INFO</div>
-          </div>
-          <div className="folder-card">
+          <div className="archive-folder">
             <h1>
               Wedding
-              <br />Archive
+              <br />
+              Archive
             </h1>
-            <div className="archive-photo">{img(cover)}</div>
-            <div className="file-icons">
-              <div className="file">date.txt<br />{dateShort.slice(5)}</div>
-              <div className="file">place.map<br />seoul</div>
-              <div className="file">rsvp.exe<br />open</div>
+            <div className="archive-photo-soft">
+              <MediaView media={cover} />
+            </div>
+            <div className="archive-files">
+              <span>date.txt</span>
+              <span>place.map</span>
+              <span>rsvp.app</span>
             </div>
           </div>
         </div>
@@ -737,23 +1049,24 @@ function Hero({
 
     case "botanical":
       return (
-        <div className="bt-hero">
-          <div className="bt-head">
+        <div className="hero-botanical">
+          <div className="botanical-head">
             <span>Botanical Wedding</span>
-            <span>June Issue</span>
+            <span>{dateShort}</span>
           </div>
-          <div className="bt-layout">
-            <div className="leaf l1" />
-            <div className="leaf l2" />
-            <div className="bt-frame" />
-            <div className="bt-photo">{img(cover)}</div>
+          <div className="botanical-stage">
+            <div className="botanical-orbit" />
+            <div className="botanical-photo">
+              <MediaView media={cover} />
+            </div>
             <h1>
               Bloom
-              <br />Together
+              <br />
+              Together
             </h1>
           </div>
-          <div className="bt-date">
-            <span>{dateShort}</span>
+          <div className="botanical-bottom">
+            <span>{groom} & {bride}</span>
             <span>{venue}</span>
           </div>
         </div>
@@ -761,63 +1074,111 @@ function Hero({
 
     case "poster":
       return (
-        <div className="po-hero">
-          <div className="po-photo">{img(cover)}</div>
-          <div className="po-veil" />
-          <div className="po-top">
-            <span>WE ARE GETTING MARRIED</span>
-            <span>NO.01 / 2026</span>
+        <div className="hero-poster">
+          <MediaView media={cover} className="poster-bg" />
+          <div className="poster-veil" />
+          <div className="poster-top">
+            <span>We are getting married</span>
+            <span>{dateShort}</span>
           </div>
-          <h1 className="po-title">
-            {g}
-            <span className="po-slash">/</span>
-            {b}
+          <h1>
+            {groom}
+            <em>/</em>
+            {bride}
           </h1>
-          <div className="po-side">JUST MARRIED</div>
-          <div className="po-foot">
-            <div className="po-bar" />
-            <div className="po-meta">
-              <span>{dateShort}</span>
-              <span>{venue}</span>
-            </div>
-          </div>
+          <div className="poster-bottom">{venue}</div>
         </div>
       );
 
     case "collage":
       return (
-        <div className="cl-hero">
-          <div className="cl-head">SCRAPBOOK / 2026 ✶ OUR WEDDING ✶</div>
-          <div className="cl-stage">
-            <div className="cl-cut cut1 tape">{img(cover)}</div>
-            <div className="cl-cut cut2 tape">{img(photos[1])}</div>
-            <div className="cl-cut cut3">{img(photos[2])}</div>
-            <div className="cl-name">
-              {g}
-              <br />&amp; {b}
-            </div>
-            <div className="cl-sticker st1">LOVE ♥</div>
-            <div className="cl-sticker st2">{dateShort}</div>
-            <div className="cl-arrow">↗ save the date!</div>
+        <div className="hero-collage">
+          <div className="collage-head">Scrapbook / Our Wedding</div>
+          <div className="collage-stage">
+            {[cover, photos[1] ?? cover, photos[2] ?? cover].map((media, index) => (
+              <div className={`collage-cut collage-cut--${index + 1}`} key={`${media.id}-${index}`}>
+                <MediaView media={media} />
+              </div>
+            ))}
+            <h1>
+              {groom}
+              <br />& {bride}
+            </h1>
+            <span className="collage-sticker">{dateShort}</span>
           </div>
         </div>
       );
 
     case "riso":
       return (
-        <div className="ri-hero">
-          <div className="ri-photo">{img(cover)}</div>
-          <div className="ri-grain" />
-          <div className="ri-top">
-            <span>RISO PRINT · 2 COLORS</span>
+        <div className="hero-riso">
+          <div className="riso-photo">
+            <MediaView media={cover} />
+          </div>
+          <div className="riso-grain" />
+          <div className="riso-top">
+            <span>Riso print / 2 colors</span>
             <span>{dateShort}</span>
           </div>
-          <h1 className="ri-title" data-text={`${g} & ${b}`}>
-            {g} &amp; {b}
+          <h1 data-text={`${groom} & ${bride}`}>
+            {groom} & {bride}
           </h1>
-          <div className="ri-foot">
-            <span>WE ARE GETTING MARRIED</span>
-            <span>{venue}</span>
+          <div className="riso-bottom">{venue}</div>
+        </div>
+      );
+
+    case "sportychic":
+      return (
+        <div className="hero-sporty">
+          <h1>sporty chic</h1>
+          <div className="sporty-photo">
+            <MediaView media={cover} />
+          </div>
+          <div className="sporty-label">
+            <span>{dateShort}</span>
+            <b>{groom} & {bride}</b>
+          </div>
+          <p>{venue}</p>
+        </div>
+      );
+
+    case "sonic":
+      return (
+        <div className="hero-sonic">
+          <div className="sonic-frame">
+            <h1>
+              IN-VOWS
+              <br />
+              IN-VOWS
+              <br />
+              IN-VOWS
+            </h1>
+            <div className="sonic-photo">
+              <MediaView media={cover} />
+            </div>
+            <p>
+              {groom} & {bride}
+              <br />
+              {dateShort}
+            </p>
+          </div>
+        </div>
+      );
+
+    case "street":
+      return (
+        <div className="hero-street">
+          <MediaView media={cover} className="street-bg" />
+          <div className="street-paper street-paper--one">POWER</div>
+          <div className="street-paper street-paper--two">ATTITUDE</div>
+          <div className="street-paper street-paper--three">LOVE</div>
+          <div className="street-copy">
+            <span>{dateShort}</span>
+            <h1>
+              {groom}
+              <br />& {bride}
+            </h1>
+            <p>{venue}</p>
           </div>
         </div>
       );

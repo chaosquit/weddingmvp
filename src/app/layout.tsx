@@ -1,52 +1,39 @@
 import type { Metadata } from "next";
 import {
-  Geist,
-  Geist_Mono,
-  Playfair_Display,
-  Space_Mono,
-  Noto_Serif_KR,
+  Cormorant_Garamond,
+  Inter,
   Noto_Sans_KR,
+  Noto_Serif_KR,
 } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-const playfair = Playfair_Display({
+const display = Cormorant_Garamond({
   variable: "--font-display",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
 });
 
-const spaceMono = Space_Mono({
-  variable: "--font-mono",
-  weight: ["400", "700"],
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
 const notoSerifKr = Noto_Serif_KR({
-  variable: "--font-serif",
+  variable: "--font-serif-kr",
   weight: ["300", "400", "500", "600", "700"],
   preload: false,
 });
 
 const notoSansKr = Noto_Sans_KR({
   variable: "--font-sans-kr",
-  weight: ["300", "400", "500", "700", "900"],
+  weight: ["300", "400", "500", "700"],
   preload: false,
 });
 
 export const metadata: Metadata = {
-  title: "Issue — 하객마다 다른, 잡지처럼 완성되는 모바일 청첩장",
-  description:
-    "실제 웨딩 사진으로 완성하는 잡지형 모바일 청첩장 스튜디오. 하객 그룹별 맞춤 링크와 실시간 에디터를 제공합니다.",
+  title: "Issue - 모던 모바일 청첩장",
+  description: "트렌디하고 단정한 세리프 기반 모바일 청첩장을 만들고 공유하는 플랫폼.",
 };
 
 export default function RootLayout({
@@ -57,9 +44,9 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${spaceMono.variable} ${notoSerifKr.variable} ${notoSansKr.variable} h-full antialiased`}
+      className={`${display.variable} ${inter.variable} ${notoSerifKr.variable} ${notoSansKr.variable}`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body>{children}</body>
     </html>
   );
 }
