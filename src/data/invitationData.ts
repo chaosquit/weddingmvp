@@ -99,15 +99,15 @@ export const mockInvitationData: InvitationData = {
     { date: "2026.09", title: "결혼식", body: "이제 같은 이름으로 시작합니다." },
   ],
   gallery: [
-    weddingPhotos[2],
-    weddingPhotos[4],
-    weddingPhotos[9],
-    weddingPhotos[10],
-    weddingPhotos[12],
-    weddingPhotos[13],
-    weddingPhotos[0],
-    weddingPhotos[7],
-    weddingPhotos[11],
+    weddingPhotos[0], // couple-05 walking
+    weddingPhotos[2], // wedding-09 mountains
+    weddingPhotos[4], // wedding-13 van kiss
+    weddingPhotos[5], // couple-09 confetti
+    weddingPhotos[1], // couple-06 lake
+    weddingPhotos[7], // couple-01 bouquet
+    weddingPhotos[8], // wedding-11 bride
+    weddingPhotos[11], // couple-03 hands
+    weddingPhotos[14], // couple-10 b&w kiss
   ],
   notice: [
     "화환은 정중히 사양합니다. 보내주시는 마음만 감사히 받겠습니다.",

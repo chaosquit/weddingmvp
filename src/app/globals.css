@@ -921,65 +921,173 @@ li {
   line-height: 1.5;
 }
 
-/* editor preview column */
+.editor__ghostbtn {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* style controls (Step 2) */
+.style-group {
+  margin-bottom: 26px;
+}
+.style-group__label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+.swatches {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(96px, 1fr));
+  gap: 10px;
+}
+.swatch {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 6px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+.swatch i {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+.swatch small {
+  font-size: 11px;
+  color: var(--muted);
+}
+.swatch.is-active {
+  border-color: var(--ink);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.12);
+}
+.swatch.is-active small {
+  color: var(--ink);
+  font-weight: 600;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  padding: 9px 15px;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  background: #fff;
+}
+.chip.is-active {
+  background: var(--ink);
+  color: #fff;
+  border-color: var(--ink);
+}
+
+/* editor preview column → "띠지" canvas (no phone bezel) */
 .editor__preview {
   display: flex;
   align-items: flex-start;
   justify-content: center;
-  padding: 26px;
-  background: radial-gradient(120% 80% at 50% 0%, #f6f5f0, #e2e0d9);
+  padding: 24px;
+  background: radial-gradient(120% 80% at 50% 0%, #f6f5f0, #e0ded7);
   border-left: 1px solid var(--line);
   position: sticky;
   top: 0;
   align-self: start;
   height: calc(100dvh - 57px);
 }
-
-/* ════════════════════════════ PHONE FRAME ════════════════════════════ */
-.phone {
-  position: relative;
-  width: 340px;
-  max-width: 100%;
-  height: 720px;
-  background: #111;
-  border-radius: 44px;
-  padding: 12px;
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.22);
-}
-.phone__notch {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 120px;
-  height: 24px;
-  background: #111;
-  border-radius: 0 0 16px 16px;
-  z-index: 5;
-}
-.phone__screen {
-  width: 100%;
+.canvas-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   height: 100%;
-  border-radius: 33px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  background: #fff;
-  scrollbar-width: none;
+  width: 100%;
 }
-.phone__screen::-webkit-scrollbar {
-  display: none;
-}
-.phone__label {
-  position: absolute;
-  bottom: -26px;
-  left: 50%;
-  transform: translateX(-50%);
+.canvas-tab {
   font-size: 12px;
   color: var(--muted);
-  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  letter-spacing: 0.02em;
 }
-.modal .phone {
+.canvas {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scrollbar-width: none;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.18), 0 0 0 1px rgba(0, 0, 0, 0.04);
+}
+.canvas::-webkit-scrollbar {
+  display: none;
+}
+.editor__preview .canvas {
+  flex: 1;
+  min-height: 0;
+}
+.canvas--modal {
+  max-width: 380px;
+  height: 78dvh;
   flex: none;
+}
+.canvas--fs {
+  max-width: 460px;
+  border-radius: 14px;
+  margin: 0 auto;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  height: auto;
+  overflow: visible;
+}
+
+/* fullscreen preview overlay */
+.fs {
+  position: fixed;
+  inset: 0;
+  z-index: 95;
+  background: #14110f;
+  display: flex;
+  flex-direction: column;
+  animation: fade 0.2s ease;
+}
+.fs__bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 22px;
+  color: #fff;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.fs__bar strong {
+  font-family: var(--font-display);
+  font-size: 18px;
+}
+.fs__bar span {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.55);
+}
+.fs__bar button {
+  margin-left: auto;
+  padding: 9px 18px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+}
+.fs__scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 28px 16px 60px;
 }
 
 /* ════════════════════════════ INVITATION RENDERER ════════════════════════════ */
@@ -1158,11 +1266,13 @@ li {
 .cover--arch .inv-cover {
   height: auto;
   flex-direction: column;
+  align-items: stretch;
   padding: 26px 22px;
   background: var(--paper);
 }
 .cover--arch .inv-cover__photo {
   position: relative;
+  width: 100%;
   height: 480px;
   border-radius: 180px 180px 8px 8px;
 }
@@ -1632,6 +1742,313 @@ li {
   color: #1a1815;
   font-weight: 700;
   font-size: 14px;
+}
+
+/* ════════════════════════════ INLINE EDIT ════════════════════════════ */
+.inv-sec.is-edit {
+  cursor: pointer;
+}
+.inv-sec.is-edit:hover {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 60%, transparent);
+}
+.inv-edit {
+  border-radius: 4px;
+  outline: 1px dashed transparent;
+  transition: background 0.15s, outline-color 0.15s;
+  cursor: text;
+}
+.is-edit .inv-edit:hover {
+  outline-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+.inv-edit:focus {
+  outline: 2px solid var(--accent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+}
+
+/* ════════════════════════════ COVER MOTION CONCEPTS ════════════════════════════ */
+/* zoom (default) keeps the base ken-burns on .inv-cover__photo */
+.motion-still .inv-cover__photo {
+  animation: none;
+}
+.motion-reveal .inv-cover__photo {
+  animation: kenburns 18s ease-in-out infinite alternate;
+}
+.motion-reveal .inv-kicker {
+  animation: rise 0.7s 0.05s both;
+}
+.motion-reveal .inv-cover__names {
+  animation: rise 0.9s 0.18s both;
+}
+.motion-reveal .inv-cover__meta {
+  animation: rise 0.9s 0.34s both;
+}
+.motion-parallax .inv-cover__photo {
+  animation: float 10s ease-in-out infinite alternate;
+}
+.motion-parallax .inv-cover__inner {
+  animation: floatUp 10s ease-in-out infinite alternate;
+}
+.motion-glow .inv-cover__photo {
+  animation: kenburns 20s ease-in-out infinite alternate;
+}
+.motion-glow .inv-cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(60% 40% at 70% 25%, rgba(255, 240, 210, 0.5), transparent 60%);
+  mix-blend-mode: screen;
+  animation: pulse 5s ease-in-out infinite;
+}
+.motion-grain .inv-cover__photo {
+  animation: none;
+  transform: scale(1.02);
+}
+.inv-cover__grain {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.16;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: flicker 0.4s steps(2) infinite;
+}
+.motion-marquee .inv-cover__photo {
+  animation: kenburns 22s ease-in-out infinite alternate;
+}
+.motion-glitch .inv-cover__names {
+  animation: glitch 2.6s steps(1) infinite;
+}
+.motion-glitch .inv-cover__label {
+  animation: glitchShift 2.6s steps(1) infinite;
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes float {
+  from {
+    transform: scale(1.08) translateY(-1.5%);
+  }
+  to {
+    transform: scale(1.08) translateY(1.5%);
+  }
+}
+@keyframes floatUp {
+  from {
+    transform: translateY(1.2%);
+  }
+  to {
+    transform: translateY(-1.2%);
+  }
+}
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+@keyframes flicker {
+  0% {
+    opacity: 0.1;
+  }
+  50% {
+    opacity: 0.22;
+  }
+  100% {
+    opacity: 0.14;
+  }
+}
+@keyframes glitch {
+  0%, 92%, 100% {
+    transform: translate(0, 0);
+    text-shadow: none;
+  }
+  93% {
+    transform: translate(-2px, 1px);
+    text-shadow: 2px 0 var(--accent), -2px 0 rgba(0, 200, 255, 0.7);
+  }
+  96% {
+    transform: translate(2px, -1px);
+    text-shadow: -2px 0 var(--accent), 2px 0 rgba(0, 200, 255, 0.7);
+  }
+}
+@keyframes glitchShift {
+  0%, 92%, 100% {
+    transform: translate(0, 0);
+  }
+  94% {
+    transform: translate(3px, -2px);
+  }
+  97% {
+    transform: translate(-3px, 2px);
+  }
+}
+
+/* ════════════════════════════ MAGAZINE — 패션 매거진 파격 ════════════════════════════ */
+.inv--magazine {
+  counter-reset: sec;
+}
+.inv--magazine .inv-sec:not(.inv-cover):not(.inv-end) {
+  counter-increment: sec;
+  border-top: 2px solid var(--ink);
+  padding-top: 30px;
+}
+.inv--magazine .inv-eyebrow {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--paper);
+  padding: 5px 11px 4px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin-bottom: 14px;
+}
+.inv--magazine .inv-eyebrow::before {
+  content: counter(sec, decimal-leading-zero) " / ";
+  opacity: 0.85;
+}
+.inv--magazine .inv-h2 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 32px;
+  line-height: 1.02;
+  text-transform: uppercase;
+  letter-spacing: -0.015em;
+  margin-bottom: 20px;
+}
+.font--sans.inv--magazine .inv-h2 {
+  font-family: var(--font-sans-kr), var(--font-geist-sans);
+  font-weight: 900;
+}
+/* marquee ticker under the cover */
+.inv-ticker {
+  background: var(--ink);
+  color: var(--paper);
+  overflow: hidden;
+  padding: 9px 0;
+  border-top: 2px solid var(--accent);
+  border-bottom: 2px solid var(--accent);
+}
+.inv-ticker__track {
+  display: flex;
+  width: max-content;
+  white-space: nowrap;
+  animation: ticker 18s linear infinite;
+}
+.inv-ticker__track span {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding-right: 8px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.inv-ticker__track i {
+  color: var(--accent);
+  font-style: normal;
+  padding: 0 6px;
+}
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+/* scrap-feel pinterest gallery for magazine */
+.inv--magazine .inv-gallery.mode-pinterest figure {
+  border-radius: 2px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+}
+.inv--magazine .inv-gallery.mode-pinterest figure:nth-child(even) {
+  transform: rotate(-1.6deg);
+}
+.inv--magazine .inv-gallery.mode-pinterest figure:nth-child(3n) {
+  transform: rotate(1.4deg);
+}
+/* barcode at ending */
+.inv-barcode {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  margin: 0 0 18px;
+}
+.inv-barcode i {
+  width: 130px;
+  height: 34px;
+  background: repeating-linear-gradient(
+    90deg,
+    #fff 0 2px,
+    transparent 2px 3px,
+    #fff 3px 4px,
+    transparent 4px 7px
+  );
+}
+.inv-barcode span {
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.8);
+}
+/* poster / editorial extra punch */
+.inv--magazine.cover--poster .inv-cover__names {
+  letter-spacing: -0.02em;
+}
+.inv--magazine .inv-cover__label {
+  border: 2px solid var(--paper);
+  background: transparent;
+}
+
+/* ════════════════════════════ CLASSIC — Vivid Vows 정제 ════════════════════════════ */
+.inv--classic .inv-sec {
+  padding: 54px 30px;
+}
+.inv--classic .inv-eyebrow {
+  letter-spacing: 0.3em;
+  font-weight: 600;
+  font-size: 10.5px;
+  text-align: center;
+  width: 100%;
+}
+.inv--classic .inv-h2 {
+  font-weight: 500;
+  text-align: center;
+  font-size: 21px;
+}
+.inv--classic .inv-sec:not(.inv-cover):not(.inv-end):not(.inv-gallery) {
+  text-align: center;
+}
+/* delicate divider ornament between classic sections */
+.inv--classic .inv-sec + .inv-sec:not(.inv-end)::before {
+  content: "";
+  display: block;
+  width: 1px;
+  height: 30px;
+  margin: -14px auto 30px;
+  background: linear-gradient(var(--accent), transparent);
+}
+.inv--classic .inv-timeline,
+.inv--classic .inv-notice {
+  text-align: left;
+}
+.inv--classic .inv-transport {
+  text-align: left;
+  max-width: 320px;
+  margin: 0 auto;
 }
 
 /* ════════════════════════════ RESPONSIVE ════════════════════════════ */

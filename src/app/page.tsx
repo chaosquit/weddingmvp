@@ -2,18 +2,33 @@
 
 import { useCallback, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
-import { templates, getTemplate } from "../data/templates";
-import type { Template, TemplateCategory } from "../data/templates";
+import {
+  templates,
+  getTemplate,
+  palettePresets,
+  getPalettePreset,
+  coverMotions,
+} from "../data/templates";
+import type {
+  Template,
+  TemplateCategory,
+  FontFamily,
+  CoverMotion,
+} from "../data/templates";
 import { mockInvitationData } from "../data/invitationData";
 import type { InvitationData } from "../data/invitationData";
 import InvitationRenderer, {
   RENDER_BLOCKS,
 } from "../components/InvitationRenderer";
-import type { GalleryMode, RenderBlock } from "../components/InvitationRenderer";
-import PhoneFrame from "../components/PhoneFrame";
+import type {
+  GalleryMode,
+  RenderBlock,
+  EditKey,
+  Override,
+} from "../components/InvitationRenderer";
 
 type Stage = "landing" | "auth" | "editor";
-type EditorStep = "template" | "content" | "share";
+type EditorStep = "template" | "style" | "content" | "share";
 
 interface BlockMeta {
   id: RenderBlock;
@@ -87,8 +102,66 @@ export default function Home() {
   const [draft, setDraft] = useState<InvitationData>(mockInvitationData);
   const [finalized, setFinalized] = useState(false);
 
+  // style customization (overrides on top of the chosen template)
+  const [paletteId, setPaletteId] = useState("template");
+  const [fontOverride, setFontOverride] = useState<FontFamily | null>(null);
+  const [motionOverride, setMotionOverride] = useState<CoverMotion | null>(null);
+  const [fullscreen, setFullscreen] = useState(false);
+
   const previewRef = useRef<HTMLDivElement>(null);
   const template = useMemo(() => getTemplate(templateId), [templateId]);
+
+  const override: Override = useMemo(
+    () => ({
+      palette: getPalettePreset(paletteId).palette,
+      font: fontOverride ?? undefined,
+      motion: motionOverride ?? undefined,
+    }),
+    [paletteId, fontOverride, motionOverride],
+  );
+
+  const applyEdit = useCallback((key: EditKey, value: string) => {
+    setDraft((d) => {
+      switch (key) {
+        case "cover.title":
+          return { ...d, cover: { ...d.cover, title: value } };
+        case "cover.groom":
+          return { ...d, cover: { ...d.cover, groom: value } };
+        case "cover.bride":
+          return { ...d, cover: { ...d.cover, bride: value } };
+        case "greeting.title":
+          return { ...d, greeting: { ...d.greeting, title: value } };
+        case "greeting.content":
+          return { ...d, greeting: { ...d.greeting, content: value } };
+        case "dateLabel":
+          return { ...d, dateLabel: value };
+        case "venue.name":
+          return { ...d, venue: { ...d.venue, name: value } };
+        case "venue.hall":
+          return { ...d, venue: { ...d.venue, hall: value } };
+        case "venue.address":
+          return { ...d, venue: { ...d.venue, address: value } };
+        case "ending":
+          return { ...d, ending: value };
+        default:
+          return d;
+      }
+    });
+    setFinalized(false);
+  }, []);
+
+  const selectFromPreview = useCallback(
+    (id: RenderBlock) => {
+      setStep("content");
+      setOpenBlock(id);
+      window.requestAnimationFrame(() => {
+        document
+          .getElementById(`acc-${id}`)
+          ?.scrollIntoView({ behavior: "smooth", block: "center" });
+      });
+    },
+    [],
+  );
 
   const visibleTemplates = useMemo(
     () => (filter === "all" ? templates : templates.filter((t) => t.category === filter)),
@@ -170,6 +243,13 @@ export default function Home() {
           </div>
           <button
             type="button"
+            className="editor__ghostbtn"
+            onClick={() => setFullscreen(true)}
+          >
+            미리보기
+          </button>
+          <button
+            type="button"
             className="editor__issue"
             onClick={() => {
               setFinalized(true);
@@ -184,6 +264,7 @@ export default function Home() {
           <nav className="editor__rail">
             {([
               ["template", "디자인"],
+              ["style", "스타일"],
               ["content", "내용 편집"],
               ["share", "공유"],
             ] as [EditorStep, string][]).map(([key, label], i) => (
@@ -226,23 +307,120 @@ export default function Home() {
                     </button>
                   ))}
                 </div>
+                <button className="editor__next" type="button" onClick={() => setStep("style")}>
+                  이 디자인으로 스타일 꾸미기 →
+                </button>
+              </>
+            )}
+
+            {step === "style" && (
+              <>
+                <span className="editor__eyebrow">Step 2 · 스타일</span>
+                <h2>색감과 분위기를 입혀보세요.</h2>
+                <p>템플릿은 그대로 두고 색 조합·폰트·커버 모션만 바꿀 수 있어요. 미리보기에 즉시 반영됩니다.</p>
+
+                <div className="style-group">
+                  <span className="style-group__label">색감 조합</span>
+                  <div className="swatches">
+                    {palettePresets.map((p) => (
+                      <button
+                        key={p.id}
+                        type="button"
+                        className={paletteId === p.id ? "swatch is-active" : "swatch"}
+                        onClick={() => {
+                          setPaletteId(p.id);
+                          setFinalized(false);
+                        }}
+                      >
+                        <i style={{ background: p.swatch }} />
+                        <small>{p.name}</small>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="style-group">
+                  <span className="style-group__label">폰트</span>
+                  <div className="seg">
+                    {([
+                      [null, "템플릿 기본"],
+                      ["serif", "세리프"],
+                      ["sans", "고딕"],
+                      ["display", "디스플레이"],
+                    ] as [FontFamily | null, string][]).map(([f, label]) => (
+                      <button
+                        key={label}
+                        type="button"
+                        className={fontOverride === f ? "is-active" : ""}
+                        onClick={() => setFontOverride(f)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="style-group">
+                  <span className="style-group__label">커버 모션</span>
+                  <div className="chips">
+                    <button
+                      type="button"
+                      className={motionOverride === null ? "chip is-active" : "chip"}
+                      onClick={() => setMotionOverride(null)}
+                    >
+                      템플릿 기본
+                    </button>
+                    {coverMotions.map((m) => (
+                      <button
+                        key={m.id}
+                        type="button"
+                        className={motionOverride === m.id ? "chip is-active" : "chip"}
+                        onClick={() => setMotionOverride(m.id)}
+                      >
+                        {m.name}
+                      </button>
+                    ))}
+                  </div>
+                  <p className="fields__hint">커버 사진 위에 CSS 모션그래픽이 적용됩니다. ‘미리보기’로 전체화면에서 확인해 보세요.</p>
+                </div>
+
+                <div className="style-group">
+                  <span className="style-group__label">갤러리 형태</span>
+                  <div className="seg">
+                    {(["pinterest", "grid", "slide"] as GalleryMode[]).map((m) => (
+                      <button
+                        key={m}
+                        type="button"
+                        className={galleryMode === m ? "is-active" : ""}
+                        onClick={() => setGalleryMode(m)}
+                      >
+                        {m === "pinterest" ? "핀터레스트" : m === "grid" ? "그리드" : "슬라이드"}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
                 <button className="editor__next" type="button" onClick={() => setStep("content")}>
-                  이 디자인으로 내용 편집하기 →
+                  내용 편집하기 →
                 </button>
               </>
             )}
 
             {step === "content" && (
               <>
-                <span className="editor__eyebrow">Step 2 · 내용 편집</span>
+                <span className="editor__eyebrow">Step 3 · 내용 편집</span>
                 <h2>블록을 켜고, 내용을 채우세요.</h2>
-                <p>제목을 누르면 미리보기가 해당 영역으로 따라갑니다.</p>
+                <p>제목을 누르면 미리보기가 따라가고, 미리보기의 글자를 직접 눌러 고칠 수도 있어요.</p>
                 <div className="accordion">
                   {BLOCK_META.map((block) => {
                     const isOn = enabled.includes(block.id);
                     const isOpen = openBlock === block.id;
                     return (
-                      <article key={block.id} className={isOpen ? "acc is-open" : "acc"}>
+                      <article
+                        key={block.id}
+                        id={`acc-${block.id}`}
+                        className={isOpen ? "acc is-open" : "acc"}
+                      >
                         <div className="acc__head">
                           <button
                             type="button"
@@ -289,7 +467,7 @@ export default function Home() {
 
             {step === "share" && (
               <>
-                <span className="editor__eyebrow">Step 3 · 공유</span>
+                <span className="editor__eyebrow">Step 4 · 공유</span>
                 <h2>하객 그룹마다 다른 링크를 발급합니다.</h2>
                 <p>같은 청첩장이지만 그룹별로 먼저 보이는 정보가 달라집니다.</p>
                 {!finalized ? (
@@ -324,17 +502,47 @@ export default function Home() {
           </section>
 
           <aside className="editor__preview">
-            <PhoneFrame ref={previewRef} label={template.name}>
-              <InvitationRenderer
-                template={template}
-                data={draft}
-                enabledBlocks={enabled}
-                galleryMode={galleryMode}
-                activeBlock={step === "content" ? openBlock : null}
-              />
-            </PhoneFrame>
+            <div className="canvas-wrap">
+              <span className="canvas-tab">미리보기 · 글자를 눌러 바로 수정</span>
+              <div className="canvas" ref={previewRef}>
+                <InvitationRenderer
+                  template={template}
+                  data={draft}
+                  enabledBlocks={enabled}
+                  galleryMode={galleryMode}
+                  activeBlock={step === "content" ? openBlock : null}
+                  editable
+                  override={override}
+                  onSelectBlock={selectFromPreview}
+                  onEdit={applyEdit}
+                />
+              </div>
+            </div>
           </aside>
         </div>
+
+        {fullscreen && (
+          <div className="fs" role="dialog" aria-modal>
+            <div className="fs__bar">
+              <strong>{template.name}</strong>
+              <span>실제 하객이 보게 될 화면</span>
+              <button type="button" onClick={() => setFullscreen(false)}>
+                닫기 ✕
+              </button>
+            </div>
+            <div className="fs__scroll">
+              <div className="canvas canvas--fs">
+                <InvitationRenderer
+                  template={template}
+                  data={draft}
+                  enabledBlocks={enabled}
+                  galleryMode={galleryMode}
+                  override={override}
+                />
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     );
   }
@@ -514,14 +722,14 @@ export default function Home() {
             <button className="modal__close" type="button" onClick={() => setPreviewId(null)}>
               ✕
             </button>
-            <PhoneFrame label={previewTemplate.name}>
+            <div className="canvas canvas--modal">
               <InvitationRenderer
                 template={previewTemplate}
                 data={mockInvitationData}
                 enabledBlocks={[...RENDER_BLOCKS]}
                 galleryMode="pinterest"
               />
-            </PhoneFrame>
+            </div>
             <div className="modal__side">
               <span className="modal__tag">{previewTemplate.tag}</span>
               <h3>{previewTemplate.name}</h3>
