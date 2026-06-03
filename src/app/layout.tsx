@@ -3,6 +3,7 @@ import {
   Geist,
   Geist_Mono,
   Playfair_Display,
+  Space_Mono,
   Noto_Serif_KR,
   Noto_Sans_KR,
 } from "next/font/google";
@@ -22,6 +23,12 @@ const playfair = Playfair_Display({
   variable: "--font-display",
   subsets: ["latin"],
   style: ["normal", "italic"],
+});
+
+const spaceMono = Space_Mono({
+  variable: "--font-mono",
+  weight: ["400", "700"],
+  subsets: ["latin"],
 });
 
 const notoSerifKr = Noto_Serif_KR({
@@ -50,7 +57,7 @@ export default function RootLayout({
   return (
     <html
       lang="ko"
-      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${notoSerifKr.variable} ${notoSansKr.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${spaceMono.variable} ${notoSerifKr.variable} ${notoSansKr.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
